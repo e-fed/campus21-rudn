@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
+
+* {
+  image-rendering: pixelated;
+}
+
+/* Анимация плавания вправо */
+@keyframes swimRight {
+  0% { left: -15%; }
+  100% { left: 115%; }
+}
+
+/* Анимация плавания влево */
+@keyframes swimLeft {
+  0% { left: 115%; }
+  100% { left: -15%; }
+}
+
+/* Вертикальное покачивание на волнах */
+@keyframes bob {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-4px) rotate(-2deg); }
+  50% { transform: translateY(0) rotate(0deg); }
+  75% { transform: translateY(4px) rotate(2deg); }
+}
+
+/* Анимация прыжка (для экрана ничьей) */
+@keyframes jump {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+/* Класс для разворота маскотов, плывущих влево */
+.face-left {
+  transform: scaleX(-1);
+}
+
+@font-face {
+  font-family: 'PixelUni';
+  src: url('./fonts/unifont-17.0.05.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --color-school21: #2ecc71;        /* спокойный зелёный */
+  --color-school21dark: #27ae60;   /* для hover */
+  --color-school21purple: #8e44ad; /* мягкий фиолетовый */
+}
+
+.dark {
+  --color-school21: #44EB99;        /* яркий неон */
+  --color-school21dark: #18DD7C;
+  --color-school21purple: #861BE3;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+}
+.animate-breathe {
+  animation: breathe 2s ease-in-out infinite;
+}
+
+@keyframes bounce-right {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+.animate-bounce-right {
+  animation: bounce-right 1.5s ease-in-out infinite;
+}
+
+/* Улучшает отрисовку fixed-элементов при трансформациях */
+.fixed {
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Тени на основе rem вместо px – масштабируются пропорционально */
+.shadow-pixel {
+  box-shadow: 0.25rem 0.25rem 0 0 rgba(0, 0, 0, 1);
+}
+.shadow-pixel-sm {
+  box-shadow: 0.125rem 0.125rem 0 0 rgba(0, 0, 0, 1);
+}
