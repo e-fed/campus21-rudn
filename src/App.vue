@@ -80,7 +80,7 @@ const navLinks = [
         </div>
 
         <div class="flex items-center gap-2">
-          <!-- Кнопка темы (видна только на десктопе) -->
+          <!-- Кнопка темы (десктоп) -->
           <button
             @click="toggleTheme"
             class="hidden md:inline-flex p-2 border-2 border-black bg-white dark:bg-gray-800 shadow-pixel-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
@@ -102,7 +102,7 @@ const navLinks = [
 
     <!-- Основной контент: без левого отступа на мобильных -->
     <main class="pl-0 sm:pl-16 pt-16">
-      <HeroSection />
+      <HeroSection :is-dark="isDark" @toggle-theme="toggleTheme" />
 
       <!-- Контейнер с рекой (для эффекта привязки) -->
       <div class="relative">

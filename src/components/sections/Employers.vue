@@ -55,11 +55,11 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
-import e1 from '../../assets/images/e1.png'
-import e2 from '../../assets/images/e2.png'
-import e3 from '../../assets/images/e3.png'
-import e4 from '../../assets/images/e4.png'
-import e5 from '../../assets/images/e5.png'
+import e1 from '../../assets/images/sber-logo-ru.svg'
+import e2 from '../../assets/images/vk-horizontal-logo.svg'
+import e3 from '../../assets/images/kaspersky-wordmark-logo.svg'
+import e4 from '../../assets/images/avito-logo.svg'
+import e5 from '../../assets/images/ozon-logo.svg'
 
 const logos = [e1, e2, e3, e4, e5]
 

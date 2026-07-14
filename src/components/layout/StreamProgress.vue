@@ -5,11 +5,13 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// Десктоп элементы
 const streamRef = ref<HTMLElement | null>(null)
 const waterRef = ref<HTMLElement | null>(null)
 const duckWrapperRef = ref<HTMLElement | null>(null)
 const duckRef = ref<HTMLElement | null>(null)
 
+// Мобильные элементы
 const streamMobileRef = ref<HTMLElement | null>(null)
 const waterMobileRef = ref<HTMLElement | null>(null)
 const duckMobileRef = ref<HTMLElement | null>(null)
@@ -26,64 +28,107 @@ function killAll() {
 
 function setupDesktopAnimation() {
   if (!streamRef.value || !waterRef.value || !duckWrapperRef.value || !duckRef.value) return
+
   const containerHeight = streamRef.value.clientHeight
   const duckSize = 48
 
+  // Вода
   const waterTween = gsap.fromTo(waterRef.value,
     { height: '0%' },
-    { height: '100%', ease: 'none', scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 0.5 } }
+    {
+      height: '100%',
+      ease: 'none',
+      scrollTrigger: {
+        trigger: document.body,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.5,
+      }
+    }
   )
   tweens.push(waterTween)
   const st = ScrollTrigger.getAll().find(t => t.vars?.trigger === document.body && t.vars?.start === 'top top')
   if (st) triggers.push(st)
 
+  // Утка
   const duckMoveTween = gsap.fromTo(duckWrapperRef.value,
     { y: containerHeight - duckSize },
-    { y: 0, ease: 'none', scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 0.5 } }
+    {
+      y: 0,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: document.body,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.5,
+      }
+    }
   )
   tweens.push(duckMoveTween)
-  const st2 = ScrollTrigger.getAll().find(t => t.vars?.trigger === document.body && t.vars?.start === 'top top' && t !== st)
-  if (st2) triggers.push(st2)
 
+  // Покачивание (только десктоп)
   const duckWobble = gsap.to(duckRef.value, {
-    y: 3, rotation: 5, yoyo: true, repeat: -1, duration: 0.4, ease: 'steps(4)'
+    y: 3,
+    rotation: 5,
+    yoyo: true,
+    repeat: -1,
+    duration: 0.4,
+    ease: 'steps(4)'
   })
   tweens.push(duckWobble)
+
+  ScrollTrigger.refresh()
 }
 
 function setupMobileAnimation() {
   if (!streamMobileRef.value || !waterMobileRef.value || !duckMobileRef.value) return
+
   const containerWidth = streamMobileRef.value.clientWidth
   const duckSize = 32
 
+  // Вода
   const waterTween = gsap.fromTo(waterMobileRef.value,
     { width: '0%' },
-    { width: '100%', ease: 'none', scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 0.5 } }
+    {
+      width: '100%',
+      ease: 'none',
+      scrollTrigger: {
+        trigger: document.body,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.5,
+      }
+    }
   )
   tweens.push(waterTween)
   const st = ScrollTrigger.getAll().find(t => t.vars?.trigger === document.body && t.vars?.start === 'top top')
   if (st) triggers.push(st)
 
+  // Утка (без покачивания, просто горизонтальное движение)
   const duckMoveTween = gsap.fromTo(duckMobileRef.value,
     { x: 0 },
-    { x: containerWidth - duckSize, ease: 'none', scrollTrigger: { trigger: document.body, start: 'top top', end: 'bottom bottom', scrub: 0.5 } }
+    {
+      x: containerWidth - duckSize,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: document.body,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.5,
+      }
+    }
   )
   tweens.push(duckMoveTween)
-  const st2 = ScrollTrigger.getAll().find(t => t.vars?.trigger === document.body && t.vars?.start === 'top top' && t !== st)
-  if (st2) triggers.push(st2)
 
-  const duckWobble = gsap.to(duckMobileRef.value, {
-    y: 3, rotation: 5, yoyo: true, repeat: -1, duration: 0.4, ease: 'steps(4)'
-  })
-  tweens.push(duckWobble)
+  ScrollTrigger.refresh()
 }
 
 function handleResize() {
   killAll()
-  setupDesktopAnimation()
-  setupMobileAnimation()
-  ScrollTrigger.refresh()
-  setTimeout(() => ScrollTrigger.refresh(), 100)
+  setTimeout(() => {
+    setupDesktopAnimation()
+    setupMobileAnimation()
+  }, 100)
 }
 
 onMounted(() => {
@@ -99,13 +144,25 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <!-- Десктопный ручеёк (вертикальный слева) -->
-  <div ref="streamRef" class="fixed left-3 sm:left-6 top-1/2 -translate-y-1/2 h-[60vh] w-2 sm:w-4 z-40 hidden sm:block">
+  <!-- ДЕСКТОП: вертикальный ручеёк слева -->
+  <div
+    ref="streamRef"
+    class="fixed left-3 sm:left-6 top-1/2 -translate-y-1/2 h-[60vh] w-2 sm:w-4 z-40 hidden sm:block"
+  >
     <div class="absolute inset-0 border-2 border-black bg-gray-200 dark:bg-gray-800 shadow-pixel"></div>
-    <div ref="waterRef" class="absolute bottom-0 left-0 right-0 h-0 bg-school21 dark:bg-school21 border-r-2 border-l-2 border-black">
+
+    <div
+      ref="waterRef"
+      class="absolute bottom-0 left-0 right-0 h-0 bg-school21 dark:bg-school21 border-r-2 border-l-2 border-black"
+    >
       <div class="absolute top-0 left-0 right-0 h-2 bg-white/40 animate-pulse"></div>
     </div>
-    <div ref="duckWrapperRef" class="absolute top-0 left-1/2 w-10 h-10 sm:w-12 sm:h-12 z-50" style="transform: translateX(-50%); will-change: transform;">
+
+    <div
+      ref="duckWrapperRef"
+      class="absolute top-0 left-1/2 w-10 h-10 sm:w-12 sm:h-12 z-50"
+      style="transform: translateX(-50%); will-change: transform;"
+    >
       <div ref="duckRef" class="w-full h-full drop-shadow-md">
         <svg viewBox="0 0 16 16" class="w-full h-full" shape-rendering="crispEdges">
           <rect x="4" y="8" width="8" height="6" fill="#FFD700" />
@@ -120,13 +177,26 @@ onUnmounted(() => {
     </div>
   </div>
 
-  <!-- Мобильный ручеёк (горизонтальный внизу) -->
-  <div ref="streamMobileRef" class="fixed bottom-6 left-4 right-4 h-3 z-50 sm:hidden">
+  <!-- МОБИЛЬНЫЙ: горизонтальный ручеёк внизу (утка над баром, без тряски) -->
+  <div
+    ref="streamMobileRef"
+    class="fixed bottom-4 left-4 right-4 h-3 z-30 sm:hidden"
+  >
     <div class="absolute inset-0 border-2 border-black bg-gray-200 dark:bg-gray-800 shadow-pixel"></div>
-    <div ref="waterMobileRef" class="absolute left-0 top-0 bottom-0 w-0 bg-school21 dark:bg-school21 border-t-2 border-b-2 border-black">
+
+    <div
+      ref="waterMobileRef"
+      class="absolute left-0 top-0 bottom-0 w-0 bg-school21 dark:bg-school21 border-t-2 border-b-2 border-black"
+    >
       <div class="absolute right-0 top-0 bottom-0 w-2 bg-white/40 animate-pulse"></div>
     </div>
-    <div ref="duckMobileRef" class="absolute top-1/2 w-8 h-8 z-50" style="transform: translateY(-50%); will-change: transform;">
+
+    <!-- Утка над баром (top: -20px) -->
+    <div
+      ref="duckMobileRef"
+      class="absolute w-8 h-8 z-50"
+      style="left: 0; top: -20px; will-change: transform;"
+    >
       <svg viewBox="0 0 16 16" class="w-full h-full drop-shadow-md" shape-rendering="crispEdges">
         <rect x="4" y="8" width="8" height="6" fill="#FFD700" />
         <rect x="3" y="9" width="10" height="4" fill="#FFD700" />

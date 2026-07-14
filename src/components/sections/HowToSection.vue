@@ -23,6 +23,9 @@
 
       <div class="mt-12 bg-white dark:bg-darkBg border-2 border-black shadow-pixel p-6">
         <h3 class="text-2xl font-bold uppercase mb-4 text-center">Критерии отбора</h3>
+        <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-4 text-center">
+          Отборочные испытания на оба образовательных трека проходят в одном месте и в одно время, но зарегистрироваться можно только на один!
+        </p>
         <ol class="space-y-3 list-decimal list-inside text-base sm:text-lg">
           <li>Для «ИИ-инженер» требуются знания базового Python</li>
           <li>Для «Цифрового заказчика» нужна цифровая грамотность и логика</li>

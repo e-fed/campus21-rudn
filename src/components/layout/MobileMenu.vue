@@ -43,9 +43,8 @@ const closeMenu = () => {
       v-if="isOpen"
       class="fixed inset-0 top-0 z-50 bg-white/98 dark:bg-darkBg/98 backdrop-blur-md sm:hidden flex flex-col"
     >
-      <!-- Шапка с кнопкой темы -->
-      <div class="flex justify-between items-center p-4 border-b-2 border-black">
-        <span class="font-bold text-lg uppercase">Меню</span>
+      <!-- Шапка: кнопка темы слева, надпись "Меню" по центру -->
+      <div class="flex items-center p-4 border-b-2 border-black relative">
         <button
           @click="emit('toggleTheme')"
           class="p-2 border-2 border-black bg-white dark:bg-gray-800 shadow-pixel-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
@@ -53,6 +52,7 @@ const closeMenu = () => {
           <Sun v-if="isDark" class="w-5 h-5" />
           <Moon v-else class="w-5 h-5" />
         </button>
+        <span class="font-bold text-lg uppercase absolute left-1/2 transform -translate-x-1/2">Меню</span>
       </div>
 
       <!-- Ссылки -->

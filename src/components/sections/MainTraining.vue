@@ -8,12 +8,14 @@
       <!-- Главный блок -->
       <div class="fade-in-up bg-white dark:bg-darkBg border-4 border-black shadow-pixel p-6 sm:p-8 relative">
         
-        <!-- Дата начала — яркий баннер -->
+        <!-- Дата начала — яркий баннер + таймер -->
         <div class="text-center mb-8">
           <div class="inline-block bg-school21 border-2 border-black px-6 py-3 shadow-pixel transform -rotate-1 hover:rotate-0 transition-transform">
             <p class="text-sm uppercase font-bold">Старт обучения</p>
             <p class="text-3xl sm:text-4xl font-black text-black">18 ноября 2026</p>
           </div>
+          <!-- Таймер обратного отсчёта -->
+          <CountdownTimer />
         </div>
 
         <!-- Блок ВАЖНО -->
@@ -36,16 +38,14 @@
           </div>
         </div>
 
-        <!-- Дополнительная информация с иконками Lucide (без эмодзи) -->
+        <!-- Дополнительная информация с иконками Lucide -->
         <div class="space-y-3 mb-6">
-          <!-- Запись на встречу -->
           <div class="flex items-center gap-3">
             <div class="flex-shrink-0 w-8 h-8 bg-school21 border-2 border-black flex items-center justify-center">
               <Calendar class="w-4 h-4 text-black" />
             </div>
             <p class="text-base sm:text-lg">Записаться на установочную встречу можно в личном кабинете.</p>
           </div>
-          <!-- Анонсы и рассылка -->
           <div class="flex items-center gap-3">
             <div class="flex-shrink-0 w-8 h-8 bg-school21 border-2 border-black flex items-center justify-center">
               <Bell class="w-4 h-4 text-black" />
@@ -71,6 +71,7 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
 import { Calendar, Bell, FileText } from 'lucide-vue-next'
+import CountdownTimer from './CountdownTimer.vue'
 
 // Анимация появления
 let observer: IntersectionObserver | null = null
@@ -79,10 +80,11 @@ onMounted(() => {
   observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
+        const el = entry.target as HTMLElement
         if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible')
+          el.classList.add('is-visible')
         } else {
-          entry.target.classList.remove('is-visible')
+          el.classList.remove('is-visible')
         }
       })
     },
