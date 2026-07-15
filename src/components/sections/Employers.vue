@@ -33,6 +33,7 @@
         </p>
         <a
           href="#register"
+          @click="trackGoal('register_button_clicked', { source: 'employers' })"
           class="inline-block bg-school21 hover:bg-school21dark text-black font-bold py-3 px-8 sm:py-4 sm:px-12 border-2 border-black shadow-pixel hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-lg sm:text-xl min-h-[48px] flex items-center justify-center mx-auto"
         >
           Подать заявку
@@ -49,6 +50,7 @@ import e2 from '../../assets/images/vk-horizontal-logo.svg'
 import e3 from '../../assets/images/kaspersky-wordmark-logo.svg'
 import e4 from '../../assets/images/avito-logo.svg'
 import e5 from '../../assets/images/ozon-logo.svg'
+import { trackGoal } from '../../utils/analytics'
 
 const logos = [e1, e2, e3, e4, e5]
 // Повторяем логотипы столько раз, чтобы перекрыть любой экран

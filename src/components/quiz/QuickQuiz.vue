@@ -4,6 +4,7 @@ import { Check, RotateCcw } from 'lucide-vue-next'
 import { useRiverState } from '../../composables/useRiver'
 import DuckSprite from '../shared/DuckSprite.vue'
 import TurtleSprite from '../shared/TurtleSprite.vue'
+import { trackGoal } from '../../utils/analytics'
 
 const riverState = useRiverState()
 
@@ -77,6 +78,13 @@ const resetQuiz = () => {
 watch(isFinished, (finished) => {
   if (finished) {
     riverState.value.quizCompleted = true
+    
+    // Фиксируем факт прохождения
+    trackGoal('quiz_completed')
+    
+    // Фиксируем конкретный результат (quiz_result_duck, quiz_result_turtle или quiz_result_tie)
+    trackGoal(`quiz_result_${result.value}`)
+    
     if (result.value !== 'tie') {
       riverState.value.selectedTrack = result.value as 'duck' | 'turtle'
     }

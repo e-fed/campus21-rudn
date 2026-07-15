@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { trackGoal } from '../../utils/analytics'
+
 defineProps<{
   isDark: boolean
 }>()
@@ -6,13 +8,19 @@ defineProps<{
 const emit = defineEmits<{
   toggleTheme: []
 }>()
+
+const handleToggle = () => {
+  trackGoal('theme_toggled')
+  emit('toggleTheme')
+}
 </script>
 
 <template>
   <button
-    @click="emit('toggleTheme')"
-    class="group inline-flex size-12 items-center justify-center border-2 border-black bg-white dark:bg-gray-800 shadow-pixel-sm transition-all duration-300 hover:border-school21 hover:text-school21 hover:shadow-[0_0_12px_-2px_rgba(68,235,153,0.7)] active:scale-90"
+    @click="handleToggle"
+    aria-label="Переключить тему"
     title="Переключить тему"
+    class="group inline-flex size-12 items-center justify-center border-2 border-black bg-white dark:bg-gray-800 shadow-pixel-sm transition-all duration-300 hover:border-school21 hover:text-school21 hover:shadow-[0_0_12px_-2px_rgba(68,235,153,0.7)] active:scale-90"
   >
     <!-- Солнце (тёмная тема) -->
     <svg

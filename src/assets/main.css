@@ -11,8 +11,12 @@ body {
   overflow-x: hidden;
 }
 
-* {
+/* Пиксельный рендеринг только для SVG-спрайтов с crispEdges */
+svg[shape-rendering="crispEdges"],
+.pixel-art {
   image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 }
 
 /* Шрифт */
@@ -26,16 +30,16 @@ body {
 
 /* Цветовые переменные */
 :root {
-  --color-school21: #44EB99;        /* основной зелёный */
-  --color-school21dark: #18DD7C;   /* тёмный зелёный */
-  --color-school21purple: #861BE3;  /* фиолетовый */
+  --color-school21: #44EB99;        /* основной акцент (зелёный в светлой теме) */
+  --color-school21dark: #18DD7C;    /* тёмный зелёный */
+  --color-school21purple: #861BE3;  /* вторичный акцент (фиолетовый в светлой теме) */
   --flow-stroke: rgba(0, 0, 0, 0.6);
 }
 
 .dark {
-  --color-school21: #861BE3;        /* фиолетовый вместо зелёного */
-  --color-school21dark: #6A1B9A;   /* тёмный фиолетовый */
-  --color-school21purple: #44EB99;  /* зелёный вместо фиолетового */
+  --color-school21: #861BE3;        /* основной акцент (фиолетовый в тёмной теме) */
+  --color-school21dark: #6A1B9A;    /* тёмный фиолетовый */
+  --color-school21purple: #44EB99;  /* вторичный акцент (зелёный в тёмной теме) */
   --flow-stroke: rgba(255, 255, 255, 0.7);
 }
 
@@ -43,38 +47,31 @@ body {
 .shadow-pixel {
   box-shadow: 0.25rem 0.25rem 0 0 rgba(0, 0, 0, 1);
 }
+
 .shadow-pixel-sm {
   box-shadow: 0.125rem 0.125rem 0 0 rgba(0, 0, 0, 1);
 }
 
-/* Fixed-элементы */
-.fixed {
-  will-change: transform;
-  backface-visibility: hidden;
-}
-
 /* ===== Анимации ===== */
-
-/* Облака */
 @keyframes clouds {
   0% { transform: translateX(0); }
   100% { transform: translateX(-120%); }
 }
+
 .animate-clouds {
   animation: clouds 120s linear infinite;
 }
 
-/* Плавание вправо / влево (используется в HeroSection) */
 @keyframes swimRight {
   0% { transform: translateX(-30%); }
   100% { transform: translateX(130%); }
 }
+
 @keyframes swimLeft {
   0% { transform: translateX(130%); }
   100% { transform: translateX(-30%); }
 }
 
-/* Покачивание на волнах (разные скорости) */
 @keyframes bob {
   0%, 100% { transform: translateY(0) rotate(0deg); }
   25% { transform: translateY(-4px) rotate(-2deg); }
@@ -82,19 +79,20 @@ body {
   75% { transform: translateY(4px) rotate(2deg); }
 }
 
-/* Кнопка "Записаться" */
 @keyframes breathe {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.03); }
 }
+
 .animate-breathe {
   animation: breathe 2s ease-in-out infinite;
 }
+
 @keyframes bounce-right {
   0%, 100% { transform: translateX(0); }
   50% { transform: translateX(4px); }
 }
+
 .animate-bounce-right {
   animation: bounce-right 1.5s ease-in-out infinite;
 }
-

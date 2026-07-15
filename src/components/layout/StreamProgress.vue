@@ -3,6 +3,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import DuckSprite from '../shared/DuckSprite.vue'
+import { trackGoal } from '../../utils/analytics'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -65,8 +66,12 @@ function spawnDuckRain() {
 function handleDuckClick(el: HTMLElement | null) {
   bounceDuck(el)
   if (isRaining.value) return
+
   clickCount++
+  trackGoal('duck_easter_egg_clicked', { count: clickCount })
+
   if (clickCount >= clickThreshold) {
+    trackGoal('duck_rain_triggered')
     spawnDuckRain()
   }
 }
@@ -253,6 +258,7 @@ onUnmounted(() => {
            Появляется только когда утка доплыла до раздела «О программе» — иначе перекрывает лого. -->
       <a
         href="#register"
+        @click="trackGoal('duck_bubble_register_clicked')"
         class="duck-bubble duck-bubble--right absolute top-1/2 left-full -translate-y-1/2 ml-2.5 z-50
                bg-school21 hover:bg-school21dark text-black font-bold
                text-[11px] leading-tight py-1 px-2
@@ -302,6 +308,7 @@ onUnmounted(() => {
       <!-- Диалоговый пузырь над уткой, не разворачивается вместе с уткой (текст всегда читаем) -->
       <a
         href="#register"
+        @click="trackGoal('duck_bubble_register_clicked')"
         class="duck-bubble duck-bubble--down absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 pointer-events-auto
                bg-school21 hover:bg-school21dark text-black font-bold
                text-[9px] leading-none py-1 px-1.5

@@ -80,6 +80,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import DuckSprite from '../shared/DuckSprite.vue'
 import TurtleSprite from '../shared/TurtleSprite.vue'
+import { trackGoal } from '../../utils/analytics'
 
 const steps = [
   { num: 1, title: 'Регистрация', desc: 'Зарегистрироваться в личном кабинете.' },
@@ -208,6 +209,9 @@ function smallStep(mascot: HTMLElement) {
 function jumpAway(mascot: HTMLElement | null) {
   if (!mascot || !mascot.parentElement) return
 
+  const isDuck = mascot === duckRef.value
+  trackGoal('mascot_interaction', { type: isDuck ? 'duck' : 'turtle' })
+  
   const parent = mascot.parentElement
   const maxX = parent.clientWidth - 64
   const maxY = parent.clientHeight - 64

@@ -68,7 +68,10 @@
         Совместный кампус РУДН и «Школы 21». Синергия науки, индустрии и практики.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-2 sm:px-0">
-        <a href="#register" class="w-full sm:w-auto bg-school21 hover:bg-school21dark text-black font-bold py-3 px-8 border-2 border-black shadow-pixel hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-lg sm:text-xl">
+        <a 
+          href="#register"
+          @click="trackGoal('register_button_clicked', { source: 'hero' })"
+          class="w-full sm:w-auto bg-school21 hover:bg-school21dark text-black font-bold py-3 px-8 border-2 border-black shadow-pixel hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-lg sm:text-xl">
           Подать заявку
         </a>
         <a href="#tracks" class="w-full sm:w-auto bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-black dark:text-white font-bold py-3 px-8 border-2 border-black shadow-pixel hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-lg sm:text-xl">
@@ -155,6 +158,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import DuckSprite from '../shared/DuckSprite.vue'
 import TurtleSprite from '../shared/TurtleSprite.vue'
+import { trackGoal } from '../../utils/analytics'
 
 defineProps<{
   isDark: boolean
@@ -181,40 +185,41 @@ const clouds = [
   { top: '35%', right: '-20%', width: '9.5rem', height: '3rem', duration: 230, delay: -200 },
 ]
 
-// IntersectionObserver для отслеживания перекрытия кнопок облаками
-let observers: IntersectionObserver[] = []
-
-function setupIntersectionObserver(targetButton: HTMLElement | null, blockedRef: typeof sunBlocked) {
+// Функция проверки перекрытия облаком кнопки
+function checkCloudOverlap(
+  targetButton: HTMLElement | null,
+  blockedRef: { value: boolean }
+) {
   if (!targetButton) return
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      const isIntersecting = entries.some(entry => entry.isIntersecting)
-      blockedRef.value = isIntersecting
-    },
-    {
-      root: targetButton,   // наблюдаем относительно кнопки
-      threshold: 0.1
-    }
-  )
-
-  cloudRefs.value.forEach(cloud => {
-    if (cloud) observer.observe(cloud)
+  const btnRect = targetButton.getBoundingClientRect()
+  const isOverlapping = cloudRefs.value.some(cloud => {
+    if (!cloud) return false
+    const cloudRect = cloud.getBoundingClientRect()
+    return !(
+      cloudRect.right < btnRect.left ||
+      cloudRect.left > btnRect.right ||
+      cloudRect.bottom < btnRect.top ||
+      cloudRect.top > btnRect.bottom
+    )
   })
-
-  observers.push(observer)
+  blockedRef.value = isOverlapping
 }
 
+let rafId: number | null = null
+
 onMounted(() => {
-  setTimeout(() => {
-    setupIntersectionObserver(sunButton.value, sunBlocked)
-    setupIntersectionObserver(moonButton.value, moonBlocked)
-  }, 100)
+  function loop() {
+    checkCloudOverlap(sunButton.value, sunBlocked)
+    checkCloudOverlap(moonButton.value, moonBlocked)
+    rafId = requestAnimationFrame(loop)
+  }
+  rafId = requestAnimationFrame(loop)
 })
 
 onUnmounted(() => {
-  observers.forEach(obs => obs.disconnect())
+  if (rafId !== null) cancelAnimationFrame(rafId)
 })
+
 </script>
 
 <style>

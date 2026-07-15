@@ -3,6 +3,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { Menu, X } from 'lucide-vue-next'
 import Logo from './Logo.vue'
 import ThemeToggle from './ThemeToggle.vue'
+import { trackGoal } from '../../utils/analytics'
 
 defineProps<{
   isDark: boolean
@@ -23,51 +24,56 @@ const navItems = [
 ]
 
 const menuOpen = ref(false)
-const navDocked = ref(false)
-const desktopNav = ref<HTMLElement | null>(null)
-const restingNavSize = ref({ width: 0, height: 0 })
 
-function updateDockedNav() {
-  const shouldDock = window.scrollY > 120
-  if (!navDocked.value && shouldDock && desktopNav.value) {
-    const rect = desktopNav.value.getBoundingClientRect()
-    restingNavSize.value = { width: rect.width, height: rect.height }
-  }
-  navDocked.value = shouldDock
+// Скрывающийся при скролле хедер (только на md+, на мобильных всегда виден — см. классы в template)
+const hideHeader = ref(false)
+const SCROLL_THRESHOLD = 150
+let lastScrollY = window.scrollY
+let ticking = false
+
+function handleScroll() {
+  if (ticking) return
+  ticking = true
+  requestAnimationFrame(() => {
+    const currentY = window.scrollY
+
+    if (currentY <= SCROLL_THRESHOLD) {
+      // у самого верха страницы шапка всегда видна
+      hideHeader.value = false
+    } else if (currentY > lastScrollY) {
+      // скролл вниз — прячем
+      hideHeader.value = true
+    } else if (currentY < lastScrollY) {
+      // скролл вверх — показываем
+      hideHeader.value = false
+    }
+
+    lastScrollY = currentY
+    ticking = false
+  })
 }
 
 onMounted(() => {
-  updateDockedNav()
-  window.addEventListener('scroll', updateDockedNav, { passive: true })
+  window.addEventListener('scroll', handleScroll, { passive: true })
 })
 
-onUnmounted(() => window.removeEventListener('scroll', updateDockedNav))
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
 </script>
 
 <template>
-  <header class="fixed top-0 left-0 right-0 z-40 bg-white/90 dark:bg-darkBg/90 backdrop-blur-sm border-b-2 border-black">
+  <header
+    class="fixed top-0 left-0 right-0 z-40 bg-white/90 dark:bg-darkBg/90 backdrop-blur-sm border-b-2 border-black transition-transform duration-300 ease-in-out"
+    :class="hideHeader ? 'md:-translate-y-full' : 'md:translate-y-0'"
+  >
     <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
       <!-- Логотип -->
-      <div
-        class="transition-all duration-500 shrink-0"
-        :class="navDocked ? 'md:-translate-x-6' : 'md:translate-x-0'"
-      >
-        <Logo :is-dark="isDark" :is-docked="navDocked" />
-      </div>
+      <Logo :is-dark="isDark" />
 
       <!-- Десктопное меню -->
-      <span
-        v-if="navDocked"
-        aria-hidden="true"
-        class="hidden md:block shrink-0"
-        :style="{ width: `${restingNavSize.width}px`, height: `${restingNavSize.height}px` }"
-      ></span>
       <nav
-        ref="desktopNav"
-        class="hidden md:flex items-center gap-2 xl:gap-4 transition-all duration-500 max-w-[85vw]"
-        :class="navDocked
-          ? 'fixed left-1/2 top-3 -translate-x-1/2 rounded-full border border-black/20 dark:border-white/20 p-2 pl-4 pr-2 shadow-pixel bg-white/95 dark:bg-darkBg/95 z-50'
-          : 'relative'"
+        class="hidden md:flex items-center gap-2 xl:gap-4 max-w-[85vw]"
         style="overflow-x: auto; white-space: nowrap; scrollbar-width: none;"
       >
         <a
@@ -82,6 +88,7 @@ onUnmounted(() => window.removeEventListener('scroll', updateDockedNav))
         </a>
         <a
           href="#register"
+          @click="trackGoal('register_button_clicked', { source: 'header_desktop' })"
           class="rounded-full bg-school21 px-3 py-1.5 text-sm font-bold text-black transition-all duration-300 hover:scale-[1.04] hover:bg-school21dark active:scale-95 whitespace-nowrap"
         >
           Регистрация
@@ -89,10 +96,7 @@ onUnmounted(() => window.removeEventListener('scroll', updateDockedNav))
       </nav>
 
       <!-- Правая группа -->
-      <div
-        class="flex items-center gap-2 shrink-0 transition-all duration-500"
-        :class="navDocked ? 'md:-translate-x-6' : 'md:translate-x-0'"
-      >
+      <div class="flex items-center gap-2 shrink-0">
         <ThemeToggle :is-dark="isDark" @toggle-theme="emit('toggleTheme')" />
 
         <button
@@ -108,18 +112,18 @@ onUnmounted(() => window.removeEventListener('scroll', updateDockedNav))
       </div>
     </div>
 
-    <!-- Мобильное меню с гарантированно непрозрачным фоном -->
+    <!-- Мобильное меню -->
     <Transition name="menu">
       <div
         v-if="menuOpen"
         class="fixed inset-0 top-0 z-[70] md:hidden flex flex-col bg-white/95 dark:bg-darkBg/90 backdrop-blur-xl"
       >
-        <!-- Шапка меню -->
         <div class="flex items-center justify-between p-4 border-b-2 border-black">
           <div class="shrink-0">
             <ThemeToggle :is-dark="isDark" @toggle-theme="emit('toggleTheme')" />
           </div>
           <button
+            aria-label="Закрыть меню"
             class="p-2 border-2 border-black bg-white dark:bg-gray-800 shadow-pixel-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
             @click="menuOpen = false"
           >
@@ -127,7 +131,6 @@ onUnmounted(() => window.removeEventListener('scroll', updateDockedNav))
           </button>
         </div>
 
-        <!-- Навигация -->
         <nav class="flex-1 flex flex-col items-center justify-center gap-6 px-8">
           <a
             v-for="item in navItems"
@@ -142,8 +145,8 @@ onUnmounted(() => window.removeEventListener('scroll', updateDockedNav))
           </a>
           <a
             href="#register"
+            @click.stop="menuOpen = false; trackGoal('register_button_clicked', { source: 'header_mobile' })"
             class="w-full max-w-xs text-center bg-school21 hover:bg-school21dark text-black font-bold py-3 border-2 border-black shadow-pixel uppercase text-lg"
-            @click.stop="menuOpen = false"
           >
             Регистрация
           </a>

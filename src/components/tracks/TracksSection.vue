@@ -4,6 +4,7 @@ import { Check, Clock, Award, BookOpen, Briefcase } from 'lucide-vue-next'
 import { useRiverState } from '../../composables/useRiver'
 import DuckSprite from '../shared/DuckSprite.vue'
 import TurtleSprite from '../shared/TurtleSprite.vue'
+import { trackGoal } from '../../utils/analytics' // <-- ДОБАВЛЕН ИМПОРТ АНАЛИТИКИ
 
 const riverState = useRiverState()
 
@@ -52,6 +53,9 @@ const selectTrack = (trackId: 'duck' | 'turtle') => {
   activeTrack.value = trackId
   riverState.value.selectedTrack = trackId
   isComparing.value = true
+  
+  // <-- ДОБАВЛЕНА ОТПРАВКА ЦЕЛИ
+  trackGoal('track_card_clicked', { track: trackId })
 }
 
 // Кнопка "Сравнить подробно" (нейтральный режим)
@@ -59,6 +63,9 @@ const startComparison = () => {
   isComparing.value = true
   activeTrack.value = null // Сбрасываем выделение карточек
   riverState.value.selectedTrack = null // Возвращаем реке исходный синий цвет!
+  
+  // <-- ДОБАВЛЕНА ОТПРАВКА ЦЕЛИ
+  trackGoal('comparison_opened')
 }
 
 // Кнопка "Свернуть"
@@ -147,7 +154,12 @@ const getTrackOpacity = (trackId: 'duck' | 'turtle') => {
                 </div>
               </div>
 
-              <a href="#register" class="block w-full text-center bg-school21 hover:bg-school21dark text-black font-bold py-3 border-2 border-black shadow-pixel-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase mt-4">
+              <!-- ДОБАВЛЕН @click.stop, чтобы клик по кнопке не сворачивал карточку, и добавлена аналитика -->
+              <a 
+                href="#register" 
+                @click.stop="trackGoal('register_button_clicked', { source: 'track_card_duck' })"
+                class="block w-full text-center bg-school21 hover:bg-school21dark text-black font-bold py-3 border-2 border-black shadow-pixel-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase mt-4"
+              >
                 Хочу на этот трек!
               </a>
             </div>
@@ -213,7 +225,12 @@ const getTrackOpacity = (trackId: 'duck' | 'turtle') => {
                 </div>
               </div>
 
-              <a href="#register" class="block w-full text-center bg-school21purple hover:bg-purple-700 text-white font-bold py-3 border-2 border-black shadow-pixel-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase mt-4">
+              <!-- ДОБАВЛЕН @click.stop, чтобы клик по кнопке не сворачивал карточку, и добавлена аналитика -->
+              <a 
+                href="#register" 
+                @click.stop="trackGoal('register_button_clicked', { source: 'track_card_turtle' })"
+                class="block w-full text-center bg-school21purple hover:bg-purple-700 text-white font-bold py-3 border-2 border-black shadow-pixel-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase mt-4"
+              >
                 Хочу на этот трек!
               </a>
             </div>
