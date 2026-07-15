@@ -5,7 +5,7 @@
 import type { Handler, HandlerEvent, HandlerContext } from '@netlify/functions'
 
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions'
-const MODEL = 'qwen-2.5-32b'
+const MODEL = 'llama-3.3-70b-versatile'
 
 const SYSTEM_PROMPT = `Ты — дружелюбный бот-помощник кампуса РУДН × Школа 21 (программы «ИИ-инженер» и «Цифровой заказчик»).
 Отвечай кратко (2-5 предложений), по-русски, только на основе фактов ниже. Если ответа в фактах нет — честно скажи,
