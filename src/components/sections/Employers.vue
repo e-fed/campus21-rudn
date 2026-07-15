@@ -1,6 +1,5 @@
 <template>
   <section class="py-12 sm:py-16 px-0 bg-gray-100 dark:bg-[#161D27] border-t-2 border-black">
-    <!-- Заголовок и описание с анимацией -->
     <div class="max-w-6xl mx-auto text-center px-4">
       <div class="fade-in-up">
         <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold uppercase mb-4">
@@ -12,31 +11,21 @@
       </div>
     </div>
 
-    <!-- Анимированная лента логотипов на всю ширину -->
     <div class="relative overflow-hidden mb-8 sm:mb-12 w-full">
       <div class="marquee-wrapper">
         <div class="marquee-track flex items-center">
-          <!-- Первый набор логотипов -->
-          <div
-            v-for="(logo, index) in logos"
-            :key="'a-' + index"
-            class="logo-card bg-gray-300 dark:bg-gray-600 border-2 border-black shadow-pixel p-4 sm:p-6 h-24 sm:h-32 w-40 sm:w-48 flex-shrink-0 flex items-center justify-center hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all mx-4"
-          >
-            <img :src="logo" :alt="'Партнер ' + (index + 1)" class="max-w-full max-h-full object-contain" />
-          </div>
-          <!-- Дубликат для бесшовной анимации -->
-          <div
-            v-for="(logo, index) in logos"
-            :key="'b-' + index"
-            class="logo-card bg-gray-300 dark:bg-gray-600 border-2 border-black shadow-pixel p-4 sm:p-6 h-24 sm:h-32 w-40 sm:w-48 flex-shrink-0 flex items-center justify-center hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all mx-4"
-          >
-            <img :src="logo" :alt="'Партнер ' + (index + 1)" class="max-w-full max-h-full object-contain" />
-          </div>
+          <!-- Набор логотипов, повторённый много раз для заполнения ширины -->
+          <template v-for="(logo, index) in extendedLogos" :key="index">
+            <div
+              class="logo-card bg-gray-300 dark:bg-gray-600 border-2 border-black shadow-pixel p-4 sm:p-6 h-24 sm:h-32 w-40 sm:w-48 flex-shrink-0 flex items-center justify-center hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all mx-4"
+            >
+              <img :src="logo" :alt="'Партнер ' + ((index % 5) + 1)" class="max-w-full max-h-full object-contain" />
+            </div>
+          </template>
         </div>
       </div>
     </div>
 
-    <!-- Призыв и кнопка с анимацией -->
     <div class="max-w-6xl mx-auto text-center px-4">
       <div class="fade-in-up delay-200">
         <p class="text-xl sm:text-2xl font-bold uppercase mb-6 sm:mb-8">
@@ -62,6 +51,8 @@ import e4 from '../../assets/images/avito-logo.svg'
 import e5 from '../../assets/images/ozon-logo.svg'
 
 const logos = [e1, e2, e3, e4, e5]
+// Повторяем логотипы столько раз, чтобы перекрыть любой экран
+const extendedLogos = [...logos, ...logos, ...logos, ...logos] // 4 повтора = 20 логотипов
 
 let observer: IntersectionObserver | null = null
 
@@ -124,7 +115,6 @@ onUnmounted(() => {
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-/* Анимация появления текста */
 .fade-in-up {
   opacity: 0;
   transform: translateY(30px);

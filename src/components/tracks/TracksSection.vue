@@ -2,6 +2,8 @@
 import { ref, watch } from 'vue'
 import { Check, Clock, Award, BookOpen, Briefcase } from 'lucide-vue-next'
 import { useRiverState } from '../../composables/useRiver'
+import DuckSprite from '../shared/DuckSprite.vue'
+import TurtleSprite from '../shared/TurtleSprite.vue'
 
 const riverState = useRiverState()
 
@@ -11,6 +13,7 @@ const tracks = [
     name: 'ЦИФРОВОЙ ЗАКАЗЧИК',
     mascot: 'duck',
     duration: '10 месяцев',
+    load: '4–6 ч/нед · 200 акад. часов',
     doc: 'Удостоверение о повышении квалификации',
     skills: ['Цифровая трансформация', 'ТЗ, API, Метрики', 'Scrum, Agile', 'No-code / Low-code'],
     career: 'Лидер цифровизации, внедрение ИИ-решений в госсекторе и корпорациях, управление ИТ-командой.',
@@ -23,6 +26,7 @@ const tracks = [
     name: 'ИИ-ИНЖЕНЕР',
     mascot: 'turtle',
     duration: '20 месяцев',
+    load: '4–6 ч/нед · 436 акад. часов',
     doc: 'Диплом о профессиональной переподготовке',
     skills: ['Python, SQL, Linux', 'Алгоритмы ИИ', 'Машинное обучение', 'LLM и нейросети'],
     career: 'ИИ-инженер, Data Scientist, ML-разработчик, проектирование и создание ИИ-продуктов.',
@@ -98,15 +102,7 @@ const getTrackOpacity = (trackId: 'duck' | 'turtle') => {
                 {{ tracks[0]!.tagline }}
               </span>
               
-              <svg viewBox="0 0 16 16" class="w-32 h-32 sm:w-40 sm:h-40 mb-6 animate-[bob_3s_ease-in-out_infinite]" shape-rendering="crispEdges">
-                <rect x="4" y="8" width="8" height="6" fill="#FFD700" />
-                <rect x="3" y="9" width="10" height="4" fill="#FFD700" />
-                <rect x="5" y="4" width="6" height="5" fill="#FFD700" />
-                <rect x="10" y="6" width="4" height="2" fill="#FF8C00" />
-                <rect x="8" y="5" width="1" height="1" fill="#000000" />
-                <rect x="5" y="10" width="4" height="2" fill="#E6C200" />
-                <rect x="2" y="9" width="2" height="2" fill="#E6C200" />
-              </svg>
+              <DuckSprite class="w-32 h-32 sm:w-40 sm:h-40 mb-6 animate-[bob_3s_ease-in-out_infinite]" />
               
               <h3 class="text-3xl font-bold uppercase mb-2 text-school21">{{ tracks[0]!.name }}</h3>
               
@@ -122,6 +118,7 @@ const getTrackOpacity = (trackId: 'duck' | 'turtle') => {
                 <div>
                   <p class="font-bold uppercase text-sm text-gray-500">Длительность</p>
                   <p class="text-lg font-bold">{{ tracks[0]!.duration }}</p>
+                  <p class="text-sm text-gray-600 dark:text-gray-400">{{ tracks[0]!.load }}</p>
                 </div>
               </div>
               <div class="flex items-start gap-3">
@@ -172,20 +169,7 @@ const getTrackOpacity = (trackId: 'duck' | 'turtle') => {
                 {{ tracks[1]!.tagline }}
               </span>
               
-              <svg viewBox="0 0 16 16" class="w-32 h-32 sm:w-40 sm:h-40 mb-6 animate-[bob_3s_ease-in-out_infinite]" style="animation-delay: 0.5s" shape-rendering="crispEdges">
-                <rect x="2" y="7" width="2" height="2" fill="#90EE90" />
-                <rect x="3" y="9" width="2" height="2" fill="#90EE90" />
-                <rect x="11" y="9" width="2" height="2" fill="#90EE90" />
-                <rect x="4" y="7" width="8" height="2" fill="#B472EE" />
-                <rect x="3" y="5" width="10" height="2" fill="#861BE3" />
-                <rect x="4" y="4" width="8" height="1" fill="#861BE3" />
-                <rect x="5" y="3" width="6" height="1" fill="#861BE3" />
-                <rect x="5" y="5" width="2" height="2" fill="#B472EE" />
-                <rect x="9" y="5" width="2" height="2" fill="#B472EE" />
-                <rect x="12" y="5" width="3" height="3" fill="#90EE90" />
-                <rect x="13" y="4" width="2" height="2" fill="#90EE90" />
-                <rect x="13" y="5" width="1" height="1" fill="#000000" />
-              </svg>
+              <TurtleSprite class="w-32 h-32 sm:w-40 sm:h-40 mb-6 animate-[bob_3s_ease-in-out_infinite]" style="animation-delay: 0.5s" />
               
               <h3 class="text-3xl font-bold uppercase mb-2 text-school21purple">{{ tracks[1]!.name }}</h3>
               
@@ -200,6 +184,7 @@ const getTrackOpacity = (trackId: 'duck' | 'turtle') => {
                 <div>
                   <p class="font-bold uppercase text-sm text-gray-500">Длительность</p>
                   <p class="text-lg font-bold">{{ tracks[1]!.duration }}</p>
+                  <p class="text-sm text-gray-600 dark:text-gray-400">{{ tracks[1]!.load }}</p>
                 </div>
               </div>
               <div class="flex items-start gap-3">

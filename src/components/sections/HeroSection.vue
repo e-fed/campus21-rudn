@@ -118,41 +118,31 @@
       <!-- Утка 1 -->
       <div class="absolute bottom-16 animate-[swimRight_22s_linear_infinite]" style="animation-delay: -5s">
         <div class="animate-[bob_3s_ease-in-out_infinite]">
-          <svg viewBox="0 0 16 16" class="w-16 h-16 sm:w-20 sm:h-20" shape-rendering="crispEdges">
-            <rect x="4" y="8" width="8" height="6" fill="#FFD700" /><rect x="3" y="9" width="10" height="4" fill="#FFD700" /><rect x="5" y="4" width="6" height="5" fill="#FFD700" /><rect x="10" y="6" width="4" height="2" fill="#FF8C00" /><rect x="8" y="5" width="1" height="1" fill="#000000" /><rect x="5" y="10" width="4" height="2" fill="#E6C200" /><rect x="2" y="9" width="2" height="2" fill="#E6C200" />
-          </svg>
+          <DuckSprite class="w-16 h-16 sm:w-20 sm:h-20" />
         </div>
       </div>
       <!-- Черепаха 1 -->
       <div class="absolute bottom-24 animate-[swimLeft_35s_linear_infinite]" style="animation-delay: -12s">
         <div class="animate-[bob_4s_ease-in-out_infinite]">
-          <svg viewBox="0 0 16 16" class="w-16 h-16 sm:w-20 sm:h-20" shape-rendering="crispEdges">
-            <rect x="2" y="7" width="2" height="2" fill="#90EE90" /><rect x="3" y="9" width="2" height="2" fill="#90EE90" /><rect x="11" y="9" width="2" height="2" fill="#90EE90" /><rect x="4" y="7" width="8" height="2" fill="#B472EE" /><rect x="3" y="5" width="10" height="2" fill="#861BE3" /><rect x="4" y="4" width="8" height="1" fill="#861BE3" /><rect x="5" y="3" width="6" height="1" fill="#861BE3" /><rect x="5" y="5" width="2" height="2" fill="#B472EE" /><rect x="9" y="5" width="2" height="2" fill="#B472EE" /><rect x="12" y="5" width="3" height="3" fill="#90EE90" /><rect x="13" y="4" width="2" height="2" fill="#90EE90" /><rect x="13" y="5" width="1" height="1" fill="#000000" />
-          </svg>
+          <TurtleSprite class="w-16 h-16 sm:w-20 sm:h-20" />
         </div>
       </div>
       <!-- Утка 2 -->
       <div class="absolute bottom-36 animate-[swimLeft_28s_linear_infinite]" style="animation-delay: -20s">
         <div class="animate-[bob_3.5s_ease-in-out_infinite]">
-          <svg viewBox="0 0 16 16" class="w-10 h-10 sm:w-12 sm:h-12" shape-rendering="crispEdges">
-            <rect x="4" y="8" width="8" height="6" fill="#FFD700" /><rect x="3" y="9" width="10" height="4" fill="#FFD700" /><rect x="5" y="4" width="6" height="5" fill="#FFD700" /><rect x="10" y="6" width="4" height="2" fill="#FF8C00" /><rect x="8" y="5" width="1" height="1" fill="#000000" /><rect x="5" y="10" width="4" height="2" fill="#E6C200" /><rect x="2" y="9" width="2" height="2" fill="#E6C200" />
-          </svg>
+          <DuckSprite class="w-10 h-10 sm:w-12 sm:h-12" />
         </div>
       </div>
       <!-- Черепаха 2 -->
       <div class="absolute bottom-40 animate-[swimRight_45s_linear_infinite]" style="animation-delay: -30s">
         <div class="animate-[bob_4.5s_ease-in-out_infinite]">
-          <svg viewBox="0 0 16 16" class="w-10 h-10 sm:w-12 sm:h-12" shape-rendering="crispEdges">
-            <rect x="2" y="7" width="2" height="2" fill="#90EE90" /><rect x="3" y="9" width="2" height="2" fill="#90EE90" /><rect x="11" y="9" width="2" height="2" fill="#90EE90" /><rect x="4" y="7" width="8" height="2" fill="#B472EE" /><rect x="3" y="5" width="10" height="2" fill="#861BE3" /><rect x="4" y="4" width="8" height="1" fill="#861BE3" /><rect x="5" y="3" width="6" height="1" fill="#861BE3" /><rect x="5" y="5" width="2" height="2" fill="#B472EE" /><rect x="9" y="5" width="2" height="2" fill="#B472EE" /><rect x="12" y="5" width="3" height="3" fill="#90EE90" /><rect x="13" y="4" width="2" height="2" fill="#90EE90" /><rect x="13" y="5" width="1" height="1" fill="#000000" />
-          </svg>
+          <TurtleSprite class="w-10 h-10 sm:w-12 sm:h-12" />
         </div>
       </div>
       <!-- Утка 3 -->
       <div class="absolute bottom-28 animate-[swimRight_32s_linear_infinite]" style="animation-delay: -18s">
         <div class="animate-[bob_3.2s_ease-in-out_infinite]">
-          <svg viewBox="0 0 16 16" class="w-12 h-12 sm:w-14 sm:h-14" shape-rendering="crispEdges">
-            <rect x="4" y="8" width="8" height="6" fill="#FFD700" /><rect x="3" y="9" width="10" height="4" fill="#FFD700" /><rect x="5" y="4" width="6" height="5" fill="#FFD700" /><rect x="10" y="6" width="4" height="2" fill="#FF8C00" /><rect x="8" y="5" width="1" height="1" fill="#000000" /><rect x="5" y="10" width="4" height="2" fill="#E6C200" /><rect x="2" y="9" width="2" height="2" fill="#E6C200" />
-          </svg>
+          <DuckSprite class="w-12 h-12 sm:w-14 sm:h-14" />
         </div>
       </div>
     </div>
@@ -163,6 +153,8 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import DuckSprite from '../shared/DuckSprite.vue'
+import TurtleSprite from '../shared/TurtleSprite.vue'
 
 defineProps<{
   isDark: boolean

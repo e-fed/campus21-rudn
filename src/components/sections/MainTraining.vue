@@ -58,7 +58,7 @@
 
         <!-- Оферта -->
         <div class="text-center pt-4 border-t-2 border-dashed border-gray-400">
-          <a href="#" class="inline-flex items-center gap-2 bg-white dark:bg-gray-800 border-2 border-black px-6 py-2 shadow-pixel hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase font-bold text-sm">
+          <a href="https://21-school.rudn.ru/documents/additional_education_programs_offer.pdf" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 bg-white dark:bg-gray-800 border-2 border-black px-6 py-2 shadow-pixel hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase font-bold text-sm">
             <FileText class="w-4 h-4" />
             Ознакомиться с офертой
           </a>

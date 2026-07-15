@@ -2,6 +2,8 @@
 import { ref, computed, watch } from 'vue'
 import { Check, RotateCcw } from 'lucide-vue-next'
 import { useRiverState } from '../../composables/useRiver'
+import DuckSprite from '../shared/DuckSprite.vue'
+import TurtleSprite from '../shared/TurtleSprite.vue'
 
 const riverState = useRiverState()
 
@@ -151,15 +153,7 @@ const programs = {
       <div v-else-if="result === 'duck'" class="text-center space-y-4 sm:space-y-6 animate-fade-in">
         <!-- (без изменений) -->
         <div class="flex justify-center mb-2 sm:mb-4">
-          <svg viewBox="0 0 16 16" class="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 animate-[bob_3s_ease-in-out_infinite]" shape-rendering="crispEdges">
-            <rect x="4" y="8" width="8" height="6" fill="#FFD700" />
-            <rect x="3" y="9" width="10" height="4" fill="#FFD700" />
-            <rect x="5" y="4" width="6" height="5" fill="#FFD700" />
-            <rect x="10" y="6" width="4" height="2" fill="#FF8C00" />
-            <rect x="8" y="5" width="1" height="1" fill="#000000" />
-            <rect x="5" y="10" width="4" height="2" fill="#E6C200" />
-            <rect x="2" y="9" width="2" height="2" fill="#E6C200" />
-          </svg>
+          <DuckSprite class="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 animate-[bob_3s_ease-in-out_infinite]" />
         </div>
         <h3 class="text-xl sm:text-2xl md:text-3xl font-extrabold uppercase leading-tight px-2">
           Твой путь: <span :class="programs.duck.color">{{ programs.duck.name }}</span>
@@ -185,20 +179,7 @@ const programs = {
       <div v-else-if="result === 'turtle'" class="text-center space-y-4 sm:space-y-6 animate-fade-in">
         <!-- (без изменений) -->
         <div class="flex justify-center mb-2 sm:mb-4">
-          <svg viewBox="0 0 16 16" class="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 animate-[bob_3s_ease-in-out_infinite]" shape-rendering="crispEdges">
-            <rect x="2" y="7" width="2" height="2" fill="#90EE90" />
-            <rect x="3" y="9" width="2" height="2" fill="#90EE90" />
-            <rect x="11" y="9" width="2" height="2" fill="#90EE90" />
-            <rect x="4" y="7" width="8" height="2" fill="#B472EE" />
-            <rect x="3" y="5" width="10" height="2" fill="#861BE3" />
-            <rect x="4" y="4" width="8" height="1" fill="#861BE3" />
-            <rect x="5" y="3" width="6" height="1" fill="#861BE3" />
-            <rect x="5" y="5" width="2" height="2" fill="#B472EE" />
-            <rect x="9" y="5" width="2" height="2" fill="#B472EE" />
-            <rect x="12" y="5" width="3" height="3" fill="#90EE90" />
-            <rect x="13" y="4" width="2" height="2" fill="#90EE90" />
-            <rect x="13" y="5" width="1" height="1" fill="#000000" />
-          </svg>
+          <TurtleSprite class="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 animate-[bob_3s_ease-in-out_infinite]" />
         </div>
         <h3 class="text-xl sm:text-2xl md:text-3xl font-extrabold uppercase leading-tight px-2">
           Твой путь: <span :class="programs.turtle.color">{{ programs.turtle.name }}</span>
@@ -225,32 +206,10 @@ const programs = {
         <!-- (без изменений) -->
         <div class="flex justify-center gap-4 sm:gap-6 mb-2 sm:mb-4">
           <div class="animate-[jump_1.5s_ease-in-out_infinite]">
-            <svg viewBox="0 0 16 16" class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24" shape-rendering="crispEdges">
-              <rect x="4" y="8" width="8" height="6" fill="#FFD700" />
-              <rect x="3" y="9" width="10" height="4" fill="#FFD700" />
-              <rect x="5" y="4" width="6" height="5" fill="#FFD700" />
-              <rect x="10" y="6" width="4" height="2" fill="#FF8C00" />
-              <rect x="8" y="5" width="1" height="1" fill="#000000" />
-              <rect x="5" y="10" width="4" height="2" fill="#E6C200" />
-              <rect x="2" y="9" width="2" height="2" fill="#E6C200" />
-            </svg>
+            <DuckSprite class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24" />
           </div>
-          
           <div class="animate-[jump_1.5s_ease-in-out_infinite]" style="animation-delay: 0.3s">
-            <svg viewBox="0 0 16 16" class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24" shape-rendering="crispEdges">
-              <rect x="2" y="7" width="2" height="2" fill="#90EE90" />
-              <rect x="3" y="9" width="2" height="2" fill="#90EE90" />
-              <rect x="11" y="9" width="2" height="2" fill="#90EE90" />
-              <rect x="4" y="7" width="8" height="2" fill="#B472EE" />
-              <rect x="3" y="5" width="10" height="2" fill="#861BE3" />
-              <rect x="4" y="4" width="8" height="1" fill="#861BE3" />
-              <rect x="5" y="3" width="6" height="1" fill="#861BE3" />
-              <rect x="5" y="5" width="2" height="2" fill="#B472EE" />
-              <rect x="9" y="5" width="2" height="2" fill="#B472EE" />
-              <rect x="12" y="5" width="3" height="3" fill="#90EE90" />
-              <rect x="13" y="4" width="2" height="2" fill="#90EE90" />
-              <rect x="13" y="5" width="1" height="1" fill="#000000" />
-            </svg>
+            <TurtleSprite class="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24" />
           </div>
         </div>
         

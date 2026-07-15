@@ -1,22 +1,20 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { Sun, Moon, ArrowRight } from 'lucide-vue-next'
 
 // Layout компоненты
 import StreamProgress from './components/layout/StreamProgress.vue'
 import TracksSection from './components/tracks/TracksSection.vue'
 import QuickQuiz from './components/quiz/QuickQuiz.vue'
 import River from './components/layout/River.vue'
-import Logo from './components/layout/Logo.vue'
-import MobileMenu from './components/layout/MobileMenu.vue'
+import AppHeader from './components/layout/AppHeader.vue'
 
 // Вынесенные секции
 import HeroSection from './components/sections/HeroSection.vue'
 import AboutSection from './components/sections/AboutSection.vue'
 import HowToSection from './components/sections/HowToSection.vue'
-import FAQSection from './components/sections/FAQSection.vue'
 import RegistrationForm from './components/sections/RegistrationForm.vue'
 import FooterSection from './components/sections/FooterSection.vue'
+import ChatWidget from './components/sections/ChatWidget.vue'
 
 // Другие секции
 import MainTraining from './components/sections/MainTraining.vue'
@@ -48,54 +46,12 @@ const toggleTheme = () => {
   if (isDark.value) document.documentElement.classList.add('dark')
   else document.documentElement.classList.remove('dark')
 }
-
-const navLinks = [
-  { href: '#about', text: 'О программе' },
-  { href: '#quiz', text: 'Тест' },
-  { href: '#tracks', text: 'Треки' },
-  { href: '#howto', text: 'Как поступить' },
-  { href: '#campus', text: 'Кампус' },
-  { href: '#faq', text: 'FAQ' },
-]
 </script>
 
 <template>
   <div class="min-h-screen bg-[#F4F4F9] dark:bg-darkBg text-textMain dark:text-white transition-colors duration-300 font-pixel text-xl sm:text-2xl">
-    <!-- Мобильное меню -->
-    <MobileMenu :is-dark="isDark" @toggle-theme="toggleTheme" />
-
-    <!-- Навигация -->
-    <nav class="fixed top-0 left-0 right-0 z-40 bg-white/90 dark:bg-darkBg/90 backdrop-blur-sm border-b-2 border-black">
-      <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-        <Logo />
-        <div class="hidden md:flex gap-6">
-          <a
-            v-for="link in navLinks"
-            :key="link.href"
-            :href="link.href"
-            class="hover:text-school21 transition-colors uppercase text-base"
-          >
-            {{ link.text }}
-          </a>
-        </div>
-
-        <div class="flex items-center gap-2">
-          <!-- Кнопка темы (десктоп) -->
-          <button
-            @click="toggleTheme"
-            class="hidden md:inline-flex p-2 border-2 border-black bg-white dark:bg-gray-800 shadow-pixel-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
-            title="Переключить тему"
-          >
-            <Sun v-if="isDark" class="w-5 h-5" />
-            <Moon v-else class="w-5 h-5" />
-          </button>
-
-          <a href="#register" class="hidden md:block bg-school21 hover:bg-school21dark text-black font-bold py-2 px-6 border-2 border-black shadow-pixel-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-base">
-            Записаться
-          </a>
-        </div>
-      </div>
-    </nav>
+    
+    <AppHeader :is-dark="isDark" @toggle-theme="toggleTheme" />
 
     <!-- Ручеек с уткой (десктоп/мобильный) -->
     <StreamProgress />
@@ -118,27 +74,13 @@ const navLinks = [
       <CareerPrep />
       <Employers />
       <HowToSection />
-      <FAQSection />
       <AboutSchool />
       <RegistrationForm />
-      <FooterSection />
+      <FooterSection :is-dark="isDark" />
     </main>
 
-    <!-- Плавающая кнопка -->
-    <a
-      href="#register"
-      class="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-50 group
-            bg-school21 hover:bg-school21dark text-black font-bold
-            py-2 px-4 sm:py-3 sm:px-6
-            border-2 border-black shadow-pixel
-            hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none
-            transition-all duration-200
-            animate-breathe
-            uppercase min-h-[44px] flex items-center gap-2"
-    >
-      <span class="hidden sm:inline">Записаться</span>
-      <ArrowRight class="w-5 h-5 sm:hidden animate-bounce-right" />
-    </a>
+    <!-- Чат-виджет -->
+    <ChatWidget />
   </div>
 </template>
 

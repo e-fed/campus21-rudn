@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Menu, X, Sun, Moon } from 'lucide-vue-next'
+import { Menu, X } from 'lucide-vue-next'
+import ThemeToggle from './ThemeToggle.vue'
 
 defineProps<{
   isDark: boolean
@@ -37,22 +38,21 @@ const closeMenu = () => {
     <X v-else class="w-6 h-6" />
   </button>
 
-  <!-- Выпадающее меню -->
+  <!-- Выпадающее меню с матовым стеклом -->
   <Transition name="menu">
     <div
       v-if="isOpen"
-      class="fixed inset-0 top-0 z-50 bg-white/98 dark:bg-darkBg/98 backdrop-blur-md sm:hidden flex flex-col"
+      class="fixed inset-0 top-0 z-50 sm:hidden flex flex-col bg-white/80 dark:bg-darkBg/80 backdrop-blur-xl"
     >
-      <!-- Шапка: кнопка темы слева, надпись "Меню" по центру -->
-      <div class="flex items-center p-4 border-b-2 border-black relative">
+      <!-- Шапка: кнопка темы слева, крестик справа -->
+      <div class="flex items-center justify-between p-4 border-b-2 border-black">
+        <ThemeToggle :is-dark="isDark" @toggle-theme="emit('toggleTheme')" />
         <button
-          @click="emit('toggleTheme')"
+          @click="closeMenu"
           class="p-2 border-2 border-black bg-white dark:bg-gray-800 shadow-pixel-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
         >
-          <Sun v-if="isDark" class="w-5 h-5" />
-          <Moon v-else class="w-5 h-5" />
+          <X class="w-5 h-5" />
         </button>
-        <span class="font-bold text-lg uppercase absolute left-1/2 transform -translate-x-1/2">Меню</span>
       </div>
 
       <!-- Ссылки -->

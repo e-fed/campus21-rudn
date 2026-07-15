@@ -8,159 +8,83 @@ const getRiverColor = () => {
   return riverState.value.selectedTrack === 'duck' ? '#44EB99' : '#861BE3'
 }
 
-const getMainOpacity = () => {
-  if (riverState.value.selectedTrack) return 0.45
-  return 0.4
-}
-
+const getMainOpacity = () => (riverState.value.selectedTrack ? 0.45 : 0.4)
 const getLeftOpacity = () => {
   if (!riverState.value.selectedTrack) return 0.4
   return riverState.value.selectedTrack === 'duck' ? 0.5 : 0.05
 }
-
 const getRightOpacity = () => {
   if (!riverState.value.selectedTrack) return 0.4
   return riverState.value.selectedTrack === 'turtle' ? 0.5 : 0.05
 }
+
+// Координаты в диапазоне x: ~210-790 внутри viewBox с полями по 150 юнитов с каждой стороны —
+// запас под самую широкую обводку (160/2=80 + буфер), чтобы ничего не резалось по краям.
+const MAIN_PATH =
+  'M 500 600 C 460 700 540 780 500 900 C 460 1020 540 1100 500 1220 ' +
+  'C 460 1340 540 1420 500 1500 C 500 1650 500 1800 500 1950 C 500 2130 500 2280 500 2400'
+
+// ЛЕВЫЙ рукав — короче, пологий, крайняя точка x=280 (запас до края viewBox достаточный)
+const LEFT_PATH =
+  'M 500 2400 C 440 2470 380 2470 330 2560 C 290 2650 270 2760 280 2880 ' +
+  'C 288 2980 320 3040 312 3160 C 305 3300 275 3420 292 3560 ' +
+  'C 305 3680 350 3760 358 3880 C 362 3950 358 3980 350 4000'
+
+// ПРАВЫЙ рукав — длиннее, извилистее, крайняя точка x=795
+const RIGHT_PATH =
+  'M 500 2400 C 570 2450 620 2420 670 2500 C 720 2580 730 2660 700 2740 ' +
+  'C 670 2820 625 2860 640 2960 C 655 3070 715 3110 740 3220 ' +
+  'C 762 3320 745 3420 760 3520 C 775 3610 810 3660 795 3760 ' +
+  'C 786 3830 758 3900 750 4000'
 </script>
 
 <template>
   <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-    <svg class="w-full h-full" viewBox="0 0 1000 4000" preserveAspectRatio="none">
-      
-      <!-- ОСНОВНАЯ РЕКА (жёсткая лесенка) -->
-      <path
-        d="M 500 600 
-           L 500 640 L 480 660 L 480 700 L 520 720 L 520 760 
-           L 500 780 L 500 820 L 460 840 L 460 880 L 520 900 
-           L 520 940 L 500 960 L 500 1000 L 480 1020 L 480 1060 
-           L 520 1080 L 520 1120 L 500 1140 L 500 1180 L 460 1200 
-           L 460 1240 L 520 1260 L 520 1300 L 500 1320 L 500 1360 
-           L 480 1380 L 480 1420 L 520 1440 L 520 1480 L 500 1500 
-           L 500 2400"
-        fill="none"
-        :stroke="getRiverColor()"
-        stroke-width="160"
-        stroke-linecap="square"
-        stroke-linejoin="miter"
-        class="transition-all duration-1000"
-        :opacity="getMainOpacity()"
-      />
+    <!-- viewBox с полями по 150 юнитов слева/справа — обводка больше не режется по краям -->
+    <svg class="w-full h-full" viewBox="-150 0 1300 4000" preserveAspectRatio="none">
+      <defs>
+        <!-- шевроны течения: тайл, непрерывно уезжающий вниз вдоль всей реки -->
+        <pattern id="flowChevrons" width="46" height="30" patternUnits="userSpaceOnUse" patternTransform="translate(0,0)">
+          <path d="M0,30 L23,4 L46,30" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="6" stroke-linecap="round" />
+          <animateTransform attributeName="patternTransform" type="translate" from="0,-30" to="0,0" dur="0.9s" repeatCount="indefinite" />
+        </pattern>
+        <pattern id="flowChevronsSlow" width="70" height="46" patternUnits="userSpaceOnUse" patternTransform="translate(0,0)">
+          <path d="M0,46 L35,6 L70,46" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="8" stroke-linecap="round" />
+          <animateTransform attributeName="patternTransform" type="translate" from="0,-46" to="0,0" dur="1.6s" repeatCount="indefinite" />
+        </pattern>
+      </defs>
 
-      <!-- ЛЕВОЕ РУСЛО (жёсткая лесенка) -->
-      <path
-        d="M 500 2400 
-           L 500 2440 L 440 2460 L 440 2500 L 380 2520 L 380 2560 
-           L 340 2580 L 340 2620 L 300 2640 L 300 2680 L 260 2700 
-           L 260 2740 L 240 2760 L 240 2800 L 220 2820 L 220 2860 
-           L 210 2880 L 210 2920 L 220 2940 L 220 2980 L 240 3000 
-           L 240 3040 L 230 3060 L 230 3100 L 240 3120 L 240 3160 
-           L 230 3180 L 230 3220 L 240 3240 L 240 3280 L 245 3300 
-           L 245 3340 L 240 3360 L 240 3400 L 245 3420 L 245 3460 
-           L 240 3480 L 240 3520 L 245 3540 L 245 3580 L 240 3600 
-           L 240 3640 L 245 3660 L 245 3700 L 250 3720 L 250 4000"
-        fill="none"
-        :stroke="getRiverColor()"
-        stroke-width="160"
-        stroke-linecap="square"
-        stroke-linejoin="miter"
-        :opacity="getLeftOpacity()"
-        class="transition-all duration-1000"
-      />
+      <!-- Один <g> на КАЖДОЕ русло: цветная подложка + оба слоя волн внутри одной группы,
+           так что они всегда двигаются как единое целое и волны не могут "вылезти" за подложку. -->
+      <g class="river-branch">
+        <path :d="MAIN_PATH" fill="none" :stroke="getRiverColor()" stroke-width="160" stroke-linecap="round" stroke-linejoin="round"
+          class="transition-colors duration-1000" :opacity="getMainOpacity()" />
+        <path :d="MAIN_PATH" fill="none" stroke="url(#flowChevronsSlow)" stroke-width="150" stroke-linecap="round" :opacity="getMainOpacity()" />
+        <path :d="MAIN_PATH" fill="none" stroke="url(#flowChevrons)" stroke-width="90" stroke-linecap="round" :opacity="getMainOpacity()" />
+      </g>
 
-      <!-- ПРАВОЕ РУСЛО (жёсткая лесенка) -->
-      <path
-        d="M 500 2400 
-           L 500 2440 L 560 2460 L 560 2500 L 620 2520 L 620 2560 
-           L 660 2580 L 660 2620 L 700 2640 L 700 2680 L 740 2700 
-           L 740 2740 L 760 2760 L 760 2800 L 780 2820 L 780 2860 
-           L 790 2880 L 790 2920 L 780 2940 L 780 2980 L 760 3000 
-           L 760 3040 L 770 3060 L 770 3100 L 760 3120 L 760 3160 
-           L 770 3180 L 770 3220 L 760 3240 L 760 3280 L 755 3300 
-           L 755 3340 L 760 3360 L 760 3400 L 755 3420 L 755 3460 
-           L 760 3480 L 760 3520 L 755 3540 L 755 3580 L 760 3600 
-           L 760 3640 L 755 3660 L 755 3700 L 750 3720 L 750 4000"
-        fill="none"
-        :stroke="getRiverColor()"
-        stroke-width="160"
-        stroke-linecap="square"
-        stroke-linejoin="miter"
-        :opacity="getRightOpacity()"
-        class="transition-all duration-1000"
-      />
+      <g class="river-branch">
+        <path :d="LEFT_PATH" fill="none" :stroke="getRiverColor()" stroke-width="140" stroke-linecap="round" stroke-linejoin="round"
+          class="transition-colors duration-1000" :opacity="getLeftOpacity()" />
+        <path :d="LEFT_PATH" fill="none" stroke="url(#flowChevronsSlow)" stroke-width="130" stroke-linecap="round" :opacity="getLeftOpacity()" />
+        <path :d="LEFT_PATH" fill="none" stroke="url(#flowChevrons)" stroke-width="76" stroke-linecap="round" :opacity="getLeftOpacity()" />
+      </g>
 
-      <!-- АНИМАЦИЯ ТЕЧЕНИЯ (основная) -->
-      <path
-        d="M 500 600 
-           L 500 640 L 480 660 L 480 700 L 520 720 L 520 760 
-           L 500 780 L 500 820 L 460 840 L 460 880 L 520 900 
-           L 520 940 L 500 960 L 500 1000 L 480 1020 L 480 1060 
-           L 520 1080 L 520 1120 L 500 1140 L 500 1180 L 460 1200 
-           L 460 1240 L 520 1260 L 520 1300 L 500 1320 L 500 1360 
-           L 480 1380 L 480 1420 L 520 1440 L 520 1480 L 500 1500 
-           L 500 2400"
-        fill="none"
-        stroke="var(--flow-stroke, rgba(0, 0, 0, 0.6))"
-        stroke-width="18"
-        stroke-dasharray="40 80"
-        stroke-linecap="square"
-        class="animate-flow-water"
-        :opacity="getMainOpacity()"
-      />
-
-      <!-- Анимация левого русла -->
-      <path
-        d="M 500 2400 
-           L 500 2440 L 440 2460 L 440 2500 L 380 2520 L 380 2560 
-           L 340 2580 L 340 2620 L 300 2640 L 300 2680 L 260 2700 
-           L 260 2740 L 240 2760 L 240 2800 L 220 2820 L 220 2860 
-           L 210 2880 L 210 2920 L 220 2940 L 220 2980 L 240 3000 
-           L 240 3040 L 230 3060 L 230 3100 L 240 3120 L 240 3160 
-           L 230 3180 L 230 3220 L 240 3240 L 240 3280 L 245 3300 
-           L 245 3340 L 240 3360 L 240 3400 L 245 3420 L 245 3460 
-           L 240 3480 L 240 3520 L 245 3540 L 245 3580 L 240 3600 
-           L 240 3640 L 245 3660 L 245 3700 L 250 3720 L 250 4000"
-        fill="none"
-        stroke="var(--flow-stroke, rgba(0, 0, 0, 0.6))"
-        stroke-width="18"
-        stroke-dasharray="40 80"
-        stroke-linecap="square"
-        class="animate-flow-water"
-        :opacity="getLeftOpacity()"
-        style="animation-delay: 0.5s"
-      />
-
-      <!-- Анимация правого русла -->
-      <path
-        d="M 500 2400 
-           L 500 2440 L 560 2460 L 560 2500 L 620 2520 L 620 2560 
-           L 660 2580 L 660 2620 L 700 2640 L 700 2680 L 740 2700 
-           L 740 2740 L 760 2760 L 760 2800 L 780 2820 L 780 2860 
-           L 790 2880 L 790 2920 L 780 2940 L 780 2980 L 760 3000 
-           L 760 3040 L 770 3060 L 770 3100 L 760 3120 L 760 3160 
-           L 770 3180 L 770 3220 L 760 3240 L 760 3280 L 755 3300 
-           L 755 3340 L 760 3360 L 760 3400 L 755 3420 L 755 3460 
-           L 760 3480 L 760 3520 L 755 3540 L 755 3580 L 760 3600 
-           L 760 3640 L 755 3660 L 755 3700 L 750 3720 L 750 4000"
-        fill="none"
-        stroke="var(--flow-stroke, rgba(0, 0, 0, 0.6))"
-        stroke-width="18"
-        stroke-dasharray="40 80"
-        stroke-linecap="square"
-        class="animate-flow-water"
-        :opacity="getRightOpacity()"
-        style="animation-delay: 1s"
-      />
+      <g class="river-branch">
+        <path :d="RIGHT_PATH" fill="none" :stroke="getRiverColor()" stroke-width="150" stroke-linecap="round" stroke-linejoin="round"
+          class="transition-colors duration-1000" :opacity="getRightOpacity()" />
+        <path :d="RIGHT_PATH" fill="none" stroke="url(#flowChevronsSlow)" stroke-width="140" stroke-linecap="round" :opacity="getRightOpacity()" />
+        <path :d="RIGHT_PATH" fill="none" stroke="url(#flowChevrons)" stroke-width="82" stroke-linecap="round" :opacity="getRightOpacity()" />
+      </g>
     </svg>
   </div>
 </template>
 
 <style scoped>
-@keyframes flow-water {
-  0% { stroke-dashoffset: 0; }
-  100% { stroke-dashoffset: -120; }
-}
-.animate-flow-water {
-  animation: flow-water 3s linear infinite;
+@media (prefers-reduced-motion: reduce) {
+  #flowChevrons animateTransform,
+  #flowChevronsSlow animateTransform {
+    display: none;
+  }
 }
 </style>

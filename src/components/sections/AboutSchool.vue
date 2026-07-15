@@ -1,5 +1,5 @@
 <template>
-  <section class="py-12 sm:py-16 px-4 bg-white dark:bg-darkBg border-t-2 border-black">
+  <section id="campus" class="py-12 sm:py-16 px-4 bg-white dark:bg-darkBg border-t-2 border-black">
     <div class="max-w-6xl mx-auto">
       <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold uppercase text-center mb-8 sm:mb-12">
         О Школе

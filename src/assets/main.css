@@ -26,16 +26,16 @@ body {
 
 /* Цветовые переменные */
 :root {
-  --color-school21: #2ecc71;
-  --color-school21dark: #27ae60;
-  --color-school21purple: #8e44ad;
+  --color-school21: #44EB99;        /* основной зелёный */
+  --color-school21dark: #18DD7C;   /* тёмный зелёный */
+  --color-school21purple: #861BE3;  /* фиолетовый */
   --flow-stroke: rgba(0, 0, 0, 0.6);
 }
 
 .dark {
-  --color-school21: #44EB99;
-  --color-school21dark: #18DD7C;
-  --color-school21purple: #861BE3;
+  --color-school21: #861BE3;        /* фиолетовый вместо зелёного */
+  --color-school21dark: #6A1B9A;   /* тёмный фиолетовый */
+  --color-school21purple: #44EB99;  /* зелёный вместо фиолетового */
   --flow-stroke: rgba(255, 255, 255, 0.7);
 }
 
@@ -97,3 +97,4 @@ body {
 .animate-bounce-right {
   animation: bounce-right 1.5s ease-in-out infinite;
 }
+

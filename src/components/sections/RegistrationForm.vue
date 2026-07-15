@@ -1,5 +1,5 @@
 <template>
-  <section id="register" class="flex items-center justify-center px-4 py-10 sm:py-16 bg-white dark:bg-darkBg border-t-2 border-black">
+  <section id="register" class="min-h-screen flex items-center justify-center px-4 py-10 sm:py-16 bg-white dark:bg-darkBg border-t-2 border-black">
     <div class="max-w-2xl w-full text-center space-y-6">
       <h2 class="text-3xl sm:text-5xl font-bold uppercase">Оставь заявку</h2>
       <p class="text-lg sm:text-2xl">
