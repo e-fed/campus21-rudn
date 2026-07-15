@@ -5,6 +5,12 @@ import { trackGoal } from '../../utils/analytics'
 defineProps<{
   isDark: boolean
 }>()
+
+const onExternalClick = (type: string, event: Event) => {
+  const anchor = event.currentTarget as HTMLAnchorElement | null
+  const url = anchor?.href ?? ''
+  trackGoal('external_link_clicked', { url, type })
+}
 </script>
 
 <template>
@@ -37,7 +43,7 @@ defineProps<{
             <a
               href="https://vk.com/21school_rudn"
               target="_blank"
-              @click="trackGoal('external_link_clicked', { url: $event.target.href, type: 'vk' })"
+              @click="onExternalClick('vk', $event)"
               class="w-10 h-10 sm:w-12 sm:h-12 bg-[#4C75A3] hover:bg-[#3d5f85] border-2 border-black shadow-pixel-sm flex items-center justify-center transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
             >
               <span class="text-white font-bold text-xs sm:text-sm leading-none">VK</span>
@@ -45,7 +51,7 @@ defineProps<{
             <a
               href="https://telegram.me/campus21_rudn"
               target="_blank"
-              @click="trackGoal('external_link_clicked', { url: $event.target.href, type: 'telegram' })"
+              @click="onExternalClick('telegram', $event)"
               class="w-10 h-10 sm:w-12 sm:h-12 bg-[#2AABEE] hover:bg-[#2294d1] border-2 border-black shadow-pixel-sm flex items-center justify-center transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
             >
               <span class="text-white font-bold text-xs sm:text-sm leading-none">TG</span>

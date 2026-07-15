@@ -95,7 +95,7 @@ onUnmounted(() => {
 })
 
 function isValidRudnEmail(value: string): boolean {
-  const trimmed = value.trim().toLowerCase()
+  const trimmed = (value ?? '').trim().toLowerCase()
   if (!trimmed) return false
   if (!trimmed.endsWith('@rudn.ru')) return false
   if (trimmed.includes('@pfur')) return false
