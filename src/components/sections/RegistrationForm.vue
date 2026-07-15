@@ -99,7 +99,7 @@ function isValidRudnEmail(value: string): boolean {
   if (!trimmed) return false
   if (!trimmed.endsWith('@rudn.ru')) return false
   if (trimmed.includes('@pfur')) return false
-  return trimmed.split('@')[0].length >= 1
+  return trimmed.indexOf('@') > 0
 }
 
 const handleSubmit = async (e: Event) => {
