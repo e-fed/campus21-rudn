@@ -50,6 +50,13 @@
 </head>
 <body>
   <div id="app"></div>
+
+  <!-- Скрытая форма для Netlify Forms -->
+  <form name="registration" netlify netlify-honeypot="bot-field" hidden>
+    <input type="text" name="email" />
+    <input type="text" name="consent" />
+  </form>
+
   <script type="module" src="/src/main.ts"></script>
 </body>
 </html>
