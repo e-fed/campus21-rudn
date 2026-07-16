@@ -171,12 +171,12 @@ async function askAi(question: string): Promise<string | null> {
       signal: controller.signal,
     })
     
-    if (res.status === 429) {
-      const data = await res.json().catch(() => ({}))
-      const retryAfter = data.retryAfter || 5
-      console.warn(`Rate limit. Ждём ${retryAfter}с...`)
-      await new Promise(resolve => setTimeout(resolve, retryAfter * 1000))
-      return askAi(question)
+    if (res.status === 429 && attempt <= 2) {
+        const data = await res.json().catch(() => ({}))
+        const retryAfter = data.retryAfter || 5
+        console.warn(`Rate limit. Попытка ${attempt}/2. Ждём ${retryAfter}с...`)
+        await new Promise(resolve => setTimeout(resolve, retryAfter * 1000))
+        return askAi(question, attempt + 1)
     }
     
     if (!res.ok) return null
