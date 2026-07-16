@@ -1,6 +1,8 @@
 <template>
-  <section id="register" class="min-h-screen flex items-center justify-center px-4 py-10 sm:py-16 bg-white dark:bg-darkBg border-t-2 border-black">
-    <div class="max-w-2xl w-full text-center space-y-6">
+  <section id="register" class="relative min-h-screen flex items-center justify-center px-4 py-10 sm:py-16 border-t-2 border-black">
+    <div class="absolute inset-0 z-0 pointer-events-none bg-white/95 dark:bg-darkBg/95" />
+
+    <div class="relative z-10 max-w-2xl w-full text-center space-y-6">
       <h2 class="text-3xl sm:text-5xl font-bold uppercase">Оставь заявку</h2>
       <p class="text-lg sm:text-2xl">Стань студентом Школы 21 уже сегодня!</p>
 

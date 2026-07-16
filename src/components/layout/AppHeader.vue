@@ -71,9 +71,16 @@ onUnmounted(() => {
       <!-- Логотип -->
       <Logo :is-dark="isDark" />
 
-      <!-- Десктопное меню -->
+      <!-- Полное меню — только на lg+ (1024px). На планшетах (768-1024px) места
+           под логотип + 7 пунктов + пилюлю Регистрация + ThemeToggle физически
+           не хватает: у <nav> не было min-w-0, поэтому flexbox не ужимал его
+           (default min-width:auto для flex-item'ов не даёт сжаться меньше
+           содержимого), overflow-x:auto не успевал включиться — и nav просто
+           наезжал своей полной шириной на соседний блок с ThemeToggle.
+           Решение: на этом диапазоне показываем компактный хедер (лого + тема + бургер),
+           как на мобильных — тесноты и наложений там больше не будет ни при каких условиях. -->
       <nav
-        class="hidden md:flex items-center gap-2 xl:gap-4 max-w-[85vw]"
+        class="hidden lg:flex items-center gap-2 xl:gap-4 min-w-0 max-w-[70vw]"
         style="overflow-x: auto; white-space: nowrap; scrollbar-width: none;"
       >
         <a
@@ -101,7 +108,7 @@ onUnmounted(() => {
 
         <button
           type="button"
-          class="relative z-50 flex size-11 shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent md:hidden"
+          class="relative z-50 flex size-11 shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent lg:hidden"
           aria-label="Меню"
           :aria-expanded="menuOpen"
           @click="menuOpen = !menuOpen"
@@ -112,11 +119,11 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <!-- Мобильное меню -->
+    <!-- Мобильное/планшетное меню (теперь до lg включительно, т.е. и на 768-1024px тоже) -->
     <Transition name="menu">
       <div
         v-if="menuOpen"
-        class="fixed inset-0 top-0 z-[70] md:hidden flex flex-col bg-white/95 dark:bg-darkBg/90 backdrop-blur-xl"
+        class="fixed inset-0 top-0 z-[70] lg:hidden flex flex-col bg-white/95 dark:bg-darkBg/90 backdrop-blur-xl"
       >
         <div class="flex items-center justify-between p-4 border-b-2 border-black">
           <div class="shrink-0">

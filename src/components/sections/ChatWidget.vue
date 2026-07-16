@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-[60]">
+  <div class="fixed bottom-24 right-4 md:right-6 z-[60]">
     <Transition name="fade">
       <button
         v-if="!isOpen"

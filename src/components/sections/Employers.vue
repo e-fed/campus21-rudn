@@ -19,7 +19,7 @@
             <div
               class="logo-card bg-gray-300 dark:bg-gray-600 border-2 border-black shadow-pixel p-4 sm:p-6 h-24 sm:h-32 w-40 sm:w-48 flex-shrink-0 flex items-center justify-center hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all mx-4"
             >
-              <img :src="logo" :alt="'Партнер ' + ((index % 5) + 1)" class="max-w-full max-h-full object-contain" />
+              <img :src="logo" :alt="'Партнер ' + ((index % 5) + 1)" loading="lazy" class="max-w-full max-h-full object-contain" />
             </div>
           </template>
         </div>

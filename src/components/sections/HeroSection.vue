@@ -1,5 +1,5 @@
 <template>
-  <section class="min-h-[100dvh] flex flex-col items-center justify-between px-4 text-center relative overflow-hidden bg-gradient-to-b from-sky-200 via-blue-100 to-cyan-200 dark:from-sky-900 dark:via-blue-950 dark:to-cyan-950">
+  <section ref="heroSectionRef" class="min-h-[100dvh] flex flex-col items-center justify-between px-4 text-center relative overflow-hidden bg-gradient-to-b from-sky-200 via-blue-100 to-cyan-200 dark:from-sky-900 dark:via-blue-950 dark:to-cyan-950">
     
     <!-- Солнце (светлая тема) – динамический z-index -->
     <button 
@@ -174,6 +174,7 @@ const moonBlocked = ref(false)
 const sunButton = ref<HTMLElement | null>(null)
 const moonButton = ref<HTMLElement | null>(null)
 const cloudRefs = ref<HTMLElement[]>([])
+const heroSectionRef = ref<HTMLElement | null>(null)
 
 // Конфигурация облаков (разные позиции, размеры, скорости)
 const clouds = [
@@ -206,18 +207,49 @@ function checkCloudOverlap(
 }
 
 let rafId: number | null = null
+let sectionObserver: IntersectionObserver | null = null
 
-onMounted(() => {
+function startLoop() {
+  if (rafId !== null) return // уже крутится
   function loop() {
     checkCloudOverlap(sunButton.value, sunBlocked)
     checkCloudOverlap(moonButton.value, moonBlocked)
     rafId = requestAnimationFrame(loop)
   }
   rafId = requestAnimationFrame(loop)
+}
+
+function stopLoop() {
+  if (rafId !== null) {
+    cancelAnimationFrame(rafId)
+    rafId = null
+  }
+}
+
+onMounted(() => {
+  // rAF крутится только пока секция реально видна на экране — как только
+  // пользователь проскроллил Hero мимо (например, читает "Как поступить"),
+  // проверка перекрытия облаком солнца/луны никому не нужна и не должна
+  // жрать кадры впустую.
+  if (!heroSectionRef.value) {
+    startLoop() // фолбэк, если ref почему-то не пришёл
+    return
+  }
+  sectionObserver = new IntersectionObserver(
+    entries => {
+      const isVisible = entries[0]?.isIntersecting
+      if (isVisible) startLoop()
+      else stopLoop()
+    },
+    { threshold: 0 }
+  )
+  sectionObserver.observe(heroSectionRef.value)
 })
 
 onUnmounted(() => {
-  if (rafId !== null) cancelAnimationFrame(rafId)
+  stopLoop()
+  sectionObserver?.disconnect()
+  sectionObserver = null
 })
 
 </script>

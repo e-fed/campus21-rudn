@@ -22,6 +22,8 @@ import CareerPrep from './components/sections/CareerPrep.vue'
 import Employers from './components/sections/Employers.vue'
 import AboutSchool from './components/sections/AboutSchool.vue'
 
+import DesktopRiverPanel from './components/layout/DesktopRiverPanel.vue'
+import FloatingRegisterButton from './components/layout/FloatingRegisterButton.vue'
 import { provideRiverState } from './composables/useRiver'
 
 const riverState = provideRiverState()
@@ -57,7 +59,7 @@ const toggleTheme = () => {
     <StreamProgress />
 
     <!-- Основной контент: без левого отступа на мобильных -->
-    <main class="pl-0 sm:pl-16 pt-16">
+    <main class="pt-16">
       <HeroSection :is-dark="isDark" @toggle-theme="toggleTheme" />
 
       <!-- Контейнер с рекой (для эффекта привязки) -->
@@ -73,14 +75,25 @@ const toggleTheme = () => {
       <MainTraining />
       <CareerPrep />
       <Employers />
-      <HowToSection />
-      <AboutSchool />
-      <RegistrationForm />
+
+      <!-- Фоновая река: DesktopRiverPanel рендерится ПЕРВЫМ внутри relative/overflow-hidden/isolate
+           обёртки как absolute-слой. isolate создаёт единый stacking context для этой обёртки,
+           поэтому z-index внутренних фонов секций (z-0), реки (z-[1]) и контента секций (z-10)
+           сравниваются напрямую друг с другом, а не блокируются собственным stacking context
+           каждой секции — это и даёт нужный порядок слоёв и кликабельность маскота. -->
+      <div class="relative overflow-hidden isolate">
+        <DesktopRiverPanel />
+        <HowToSection />
+        <AboutSchool />
+        <RegistrationForm />
+      </div>
+
       <FooterSection :is-dark="isDark" />
     </main>
 
     <!-- Чат-виджет -->
     <ChatWidget />
+    <FloatingRegisterButton />
   </div>
 </template>
 

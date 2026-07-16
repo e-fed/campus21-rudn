@@ -18,19 +18,15 @@ const getRightOpacity = () => {
   return riverState.value.selectedTrack === 'turtle' ? 0.5 : 0.05
 }
 
-// Координаты в диапазоне x: ~210-790 внутри viewBox с полями по 150 юнитов с каждой стороны —
-// запас под самую широкую обводку (160/2=80 + буфер), чтобы ничего не резалось по краям.
 const MAIN_PATH =
   'M 500 600 C 460 700 540 780 500 900 C 460 1020 540 1100 500 1220 ' +
   'C 460 1340 540 1420 500 1500 C 500 1650 500 1800 500 1950 C 500 2130 500 2280 500 2400'
 
-// ЛЕВЫЙ рукав — короче, пологий, крайняя точка x=280 (запас до края viewBox достаточный)
 const LEFT_PATH =
   'M 500 2400 C 440 2470 380 2470 330 2560 C 290 2650 270 2760 280 2880 ' +
   'C 288 2980 320 3040 312 3160 C 305 3300 275 3420 292 3560 ' +
   'C 305 3680 350 3760 358 3880 C 362 3950 358 3980 350 4000'
 
-// ПРАВЫЙ рукав — длиннее, извилистее, крайняя точка x=795
 const RIGHT_PATH =
   'M 500 2400 C 570 2450 620 2420 670 2500 C 720 2580 730 2660 700 2740 ' +
   'C 670 2820 625 2860 640 2960 C 655 3070 715 3110 740 3220 ' +
@@ -39,52 +35,89 @@ const RIGHT_PATH =
 </script>
 
 <template>
-  <div class="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-    <!-- viewBox с полями по 150 юнитов слева/справа — обводка больше не режется по краям -->
+  <!--
+    ВАЖНО: только md+ — на узких ширинах (в т.ч. когда DevTools обрезает viewport
+    ниже md) секции AboutSection/QuickQuiz/TracksSection переверстываются в
+    мобильную раскладку и их суммарная высота меняется непропорционально фиксированным
+    Y-опорным точкам пути (развилка и т.д.) — река визуально "съезжает" относительно
+    контента. Проще и надёжнее не рендерить декоративный слой на этих ширинах,
+    чем пытаться пересчитывать путь под каждую раскладку.
+  -->
+  <div class="hidden md:block absolute inset-0 pointer-events-none z-0 overflow-hidden">
     <svg class="w-full h-full" viewBox="-150 0 1300 4000" preserveAspectRatio="none">
       <defs>
-        <!-- шевроны течения: тайл, непрерывно уезжающий вниз вдоль всей реки -->
-        <pattern id="flowChevrons" width="46" height="30" patternUnits="userSpaceOnUse" patternTransform="translate(0,0)">
+        <pattern id="flowChevrons" width="46" height="30" patternUnits="userSpaceOnUse">
           <path d="M0,30 L23,4 L46,30" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="6" stroke-linecap="round" />
-          <animateTransform attributeName="patternTransform" type="translate" from="0,-30" to="0,0" dur="0.9s" repeatCount="indefinite" />
         </pattern>
-        <pattern id="flowChevronsSlow" width="70" height="46" patternUnits="userSpaceOnUse" patternTransform="translate(0,0)">
+        <pattern id="flowChevronsSlow" width="70" height="46" patternUnits="userSpaceOnUse">
           <path d="M0,46 L35,6 L70,46" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="8" stroke-linecap="round" />
-          <animateTransform attributeName="patternTransform" type="translate" from="0,-46" to="0,0" dur="1.6s" repeatCount="indefinite" />
         </pattern>
+        <!-- клип по каждому руслу, чтобы CSS-анимированные волны не вылезали за пределы обводки -->
+        <clipPath id="clipMain"><path :d="MAIN_PATH" stroke-width="160" fill="none" stroke-linecap="round" /></clipPath>
       </defs>
 
-      <!-- Один <g> на КАЖДОЕ русло: цветная подложка + оба слоя волн внутри одной группы,
-           так что они всегда двигаются как единое целое и волны не могут "вылезти" за подложку. -->
       <g class="river-branch">
         <path :d="MAIN_PATH" fill="none" :stroke="getRiverColor()" stroke-width="160" stroke-linecap="round" stroke-linejoin="round"
           class="transition-colors duration-1000" :opacity="getMainOpacity()" />
-        <path :d="MAIN_PATH" fill="none" stroke="url(#flowChevronsSlow)" stroke-width="150" stroke-linecap="round" :opacity="getMainOpacity()" />
-        <path :d="MAIN_PATH" fill="none" stroke="url(#flowChevrons)" stroke-width="90" stroke-linecap="round" :opacity="getMainOpacity()" />
+        <!-- течение теперь через CSS transform на <g>, а не SMIL animateTransform -->
+        <g class="flow-layer flow-layer--slow" :opacity="getMainOpacity()">
+          <path :d="MAIN_PATH" fill="none" stroke="url(#flowChevronsSlow)" stroke-width="150" stroke-linecap="round" />
+        </g>
+        <g class="flow-layer flow-layer--fast" :opacity="getMainOpacity()">
+          <path :d="MAIN_PATH" fill="none" stroke="url(#flowChevrons)" stroke-width="90" stroke-linecap="round" />
+        </g>
       </g>
 
       <g class="river-branch">
         <path :d="LEFT_PATH" fill="none" :stroke="getRiverColor()" stroke-width="140" stroke-linecap="round" stroke-linejoin="round"
           class="transition-colors duration-1000" :opacity="getLeftOpacity()" />
-        <path :d="LEFT_PATH" fill="none" stroke="url(#flowChevronsSlow)" stroke-width="130" stroke-linecap="round" :opacity="getLeftOpacity()" />
-        <path :d="LEFT_PATH" fill="none" stroke="url(#flowChevrons)" stroke-width="76" stroke-linecap="round" :opacity="getLeftOpacity()" />
+        <g class="flow-layer flow-layer--slow" :opacity="getLeftOpacity()">
+          <path :d="LEFT_PATH" fill="none" stroke="url(#flowChevronsSlow)" stroke-width="130" stroke-linecap="round" />
+        </g>
+        <g class="flow-layer flow-layer--fast" :opacity="getLeftOpacity()">
+          <path :d="LEFT_PATH" fill="none" stroke="url(#flowChevrons)" stroke-width="76" stroke-linecap="round" />
+        </g>
       </g>
 
       <g class="river-branch">
         <path :d="RIGHT_PATH" fill="none" :stroke="getRiverColor()" stroke-width="150" stroke-linecap="round" stroke-linejoin="round"
           class="transition-colors duration-1000" :opacity="getRightOpacity()" />
-        <path :d="RIGHT_PATH" fill="none" stroke="url(#flowChevronsSlow)" stroke-width="140" stroke-linecap="round" :opacity="getRightOpacity()" />
-        <path :d="RIGHT_PATH" fill="none" stroke="url(#flowChevrons)" stroke-width="82" stroke-linecap="round" :opacity="getRightOpacity()" />
+        <g class="flow-layer flow-layer--slow" :opacity="getRightOpacity()">
+          <path :d="RIGHT_PATH" fill="none" stroke="url(#flowChevronsSlow)" stroke-width="140" stroke-linecap="round" />
+        </g>
+        <g class="flow-layer flow-layer--fast" :opacity="getRightOpacity()">
+          <path :d="RIGHT_PATH" fill="none" stroke="url(#flowChevrons)" stroke-width="82" stroke-linecap="round" />
+        </g>
       </g>
     </svg>
   </div>
 </template>
 
 <style scoped>
+/* CSS вместо SMIL — надёжно переживает переключение DevTools / смену режима отрисовки */
+.flow-layer {
+  animation: flow-move 1.4s linear infinite;
+}
+.flow-layer--slow {
+  animation-duration: 2.2s;
+}
+.flow-layer--fast {
+  animation-duration: 1.1s;
+}
+@keyframes flow-move {
+  from { transform: translateY(-46px); }
+  to { transform: translateY(0); }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  #flowChevrons animateTransform,
-  #flowChevronsSlow animateTransform {
-    display: none;
-  }
+  .flow-layer { animation: none !important; }
+}
+
+/* Защитный дубль: сама река уже не рендерится на <md (hidden md:block на корневом
+   div — см. template), поэтому анимация физически не выполняется браузером.
+   Правило ниже — просто страховка на случай, если в будущем div-обёртку
+   изменят и уберут hidden, не заметив, что анимация должна остаться md+. */
+@media (max-width: 767px) {
+  .flow-layer { animation: none !important; }
 }
 </style>

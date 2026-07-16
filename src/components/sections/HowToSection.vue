@@ -1,6 +1,11 @@
 <template>
-  <section id="howto" class="py-10 sm:py-16 px-4 bg-gray-100 dark:bg-[#161D27] border-t-2 border-black overflow-hidden">
-    <div class="max-w-5xl mx-auto">
+  <section id="howto" class="relative py-10 sm:py-16 px-4 border-t-2 border-black overflow-hidden">
+    <!-- Фон секции вынесен в отдельный слой z-0 (а не на сам <section>), чтобы река
+         (z-[1] в общем isolate-контексте обёртки в App.vue) могла лечь поверх фона,
+         но при этом контент секции (z-10 ниже) всё равно оставался выше реки. -->
+    <div class="absolute inset-0 z-0 pointer-events-none bg-gray-100/95 dark:bg-[#161D27]/95" />
+
+    <div class="relative z-10 max-w-5xl mx-auto">
       <h2 class="text-3xl sm:text-5xl font-bold uppercase text-center mb-3">Как поступить</h2>
       <p class="text-center text-gray-600 dark:text-gray-400 mb-10 sm:mb-14">Шесть шагов от регистрации до первого дня в кампусе</p>
 

@@ -22,7 +22,7 @@ svg[shape-rendering="crispEdges"],
 /* Шрифт */
 @font-face {
   font-family: 'PixelUni';
-  src: url('./fonts/unifont-17.0.05.woff2') format('woff2');
+  src: url('./fonts/unifont-subset.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
