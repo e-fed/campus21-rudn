@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, defineAsyncComponent } from 'vue'
 
 // Layout компоненты
 import StreamProgress from './components/layout/StreamProgress.vue'
@@ -14,7 +14,11 @@ import AboutSection from './components/sections/AboutSection.vue'
 import HowToSection from './components/sections/HowToSection.vue'
 import RegistrationForm from './components/sections/RegistrationForm.vue'
 import FooterSection from './components/sections/FooterSection.vue'
-import ChatWidget from './components/sections/ChatWidget.vue'
+
+// Чат-виджет грузится асинхронно отдельным чанком: он не нужен для первого экрана,
+// а его код (Groq-интеграция, история диалога) достаточно тяжёлый, чтобы не тянуть
+// его в основной бандл и не задерживать первую отрисовку страницы.
+const ChatWidget = defineAsyncComponent(() => import('./components/sections/ChatWidget.vue'))
 
 // Другие секции
 import MainTraining from './components/sections/MainTraining.vue'
@@ -25,6 +29,7 @@ import AboutSchool from './components/sections/AboutSchool.vue'
 import DesktopRiverPanel from './components/layout/DesktopRiverPanel.vue'
 import FloatingRegisterButton from './components/layout/FloatingRegisterButton.vue'
 import { provideRiverState } from './composables/useRiver'
+import { initScrollDepthTracking } from './composables/useScrollDepth'
 
 provideRiverState()
 const isDark = ref(false)
@@ -41,6 +46,8 @@ onMounted(() => {
     if (e.matches) document.documentElement.classList.add('dark')
     else document.documentElement.classList.remove('dark')
   })
+
+  initScrollDepthTracking()
 })
 
 const toggleTheme = () => {

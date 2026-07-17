@@ -104,7 +104,13 @@ const getTrackOpacity = (trackId: 'duck' | 'turtle') => {
         <!-- ТРЕК 1: УТКА -->
         <div
           @click="selectTrack('duck')"
-          class="relative z-10 cursor-pointer transition-all duration-500 ease-in-out"
+          @keydown.enter="selectTrack('duck')"
+          @keydown.space.prevent="selectTrack('duck')"
+          tabindex="0"
+          role="button"
+          :aria-pressed="activeTrack === 'duck'"
+          aria-label="Показать программу «Цифровой заказчик»"
+          class="relative z-10 cursor-pointer transition-all duration-500 ease-in-out rounded-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-school21 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
           :style="{
             opacity: getTrackOpacity('duck'),
             transform:
@@ -195,7 +201,13 @@ const getTrackOpacity = (trackId: 'duck' | 'turtle') => {
         <!-- ТРЕК 2: ЧЕРЕПАХА -->
         <div
           @click="selectTrack('turtle')"
-          class="relative z-10 cursor-pointer transition-all duration-500 ease-in-out"
+          @keydown.enter="selectTrack('turtle')"
+          @keydown.space.prevent="selectTrack('turtle')"
+          tabindex="0"
+          role="button"
+          :aria-pressed="activeTrack === 'turtle'"
+          aria-label="Показать программу «ИИ-инженер»"
+          class="relative z-10 cursor-pointer transition-all duration-500 ease-in-out rounded-sm focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-school21purple focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
           :style="{
             opacity: getTrackOpacity('turtle'),
             transform:

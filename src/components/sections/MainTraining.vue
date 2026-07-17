@@ -19,6 +19,15 @@
           </div>
           <!-- Таймер обратного отсчёта -->
           <CountdownTimer />
+
+          <!-- Добавить дату старта в календарь — работает на повторные визиты/напоминание -->
+          <button
+            type="button"
+            @click="handleAddToCalendar"
+            class="mt-4 inline-flex items-center gap-2 bg-white dark:bg-darkBg hover:bg-gray-100 dark:hover:bg-[#222c3a] text-black dark:text-white font-bold py-2 px-4 border-2 border-black shadow-pixel-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-xs sm:text-sm"
+          >
+            <Calendar class="w-4 h-4" /> Добавить в календарь
+          </button>
         </div>
 
         <!-- Блок ВАЖНО -->
@@ -93,6 +102,13 @@
 import { onMounted, onUnmounted } from 'vue'
 import { Calendar, Bell, FileText } from 'lucide-vue-next'
 import CountdownTimer from './CountdownTimer.vue'
+import { downloadStartDateIcs } from '../../utils/calendar'
+import { trackGoal } from '../../utils/analytics'
+
+const handleAddToCalendar = () => {
+  downloadStartDateIcs()
+  trackGoal('add_to_calendar_clicked')
+}
 
 // Анимация появления
 let observer: IntersectionObserver | null = null

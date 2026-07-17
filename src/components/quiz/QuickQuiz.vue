@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { Check, RotateCcw } from 'lucide-vue-next'
+import { Check, RotateCcw, Share2 } from 'lucide-vue-next'
 import { useRiverState } from '../../composables/useRiver'
 import DuckSprite from '../shared/DuckSprite.vue'
 import TurtleSprite from '../shared/TurtleSprite.vue'
@@ -119,6 +119,40 @@ const selectTrack = (trackId: 'duck' | 'turtle') => {
   riverState.value.selectedTrack = trackId
 }
 
+const shareCopied = ref(false)
+
+const shareResult = async (trackId: 'duck' | 'turtle' | 'tie') => {
+  const shareUrl = `${window.location.origin}${window.location.pathname}#quiz`
+
+  const text =
+    trackId === 'tie'
+      ? 'Я прошёл квиз кампуса РУДН × Школа 21 — оказалось, мне подходят сразу оба трека: «Цифровой заказчик» и «ИИ-инженер»! Пройди и узнай свой:'
+      : `Я прошёл квиз кампуса РУДН × Школа 21 — мой путь: ${programs[trackId].name}! Пройди и узнай свой:`
+
+  trackGoal('quiz_result_shared', { track: trackId })
+
+  // navigator.share сам красиво комбинирует text и url в нативном шаринге —
+  // передавать готовую ссылку внутри text не нужно, иначе она задваивается
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: 'Кампус РУДН × Школа 21', text, url: shareUrl })
+      return
+    } catch {
+      // пользователь отменил шеринг — просто ничего не делаем
+      return
+    }
+  }
+
+  // Фолбэк (десктоп без Web Share API): копируем текст и ссылку одной строкой
+  try {
+    await navigator.clipboard.writeText(`${text} ${shareUrl}`)
+    shareCopied.value = true
+    setTimeout(() => (shareCopied.value = false), 2000)
+  } catch {
+    // clipboard недоступен — молча игнорируем, кнопка не критична
+  }
+}
+
 const programs = {
   duck: {
     name: 'ЦИФРОВОЙ ЗАКАЗЧИК',
@@ -131,7 +165,7 @@ const programs = {
     name: 'ИИ-ИНЖЕНЕР',
     desc: 'Ты — создатель и технарь. Тебе важно понимать, как всё работает изнутри. Ты будешь проектировать архитектуры, обучать модели и писать чистый код.',
     duration: '20 месяцев',
-    doc: 'Диплом о профпереподготовке',
+    doc: 'Диплом о профессиональной переподготовке',
     color: 'text-school21purple',
   },
 }
@@ -229,9 +263,13 @@ const programs = {
             <RotateCcw class="w-5 h-5 sm:w-6 sm:h-6" /> Заново
           </button>
         </div>
+        <button
+          @click="shareResult('duck')"
+          class="inline-flex items-center justify-center gap-2 mx-auto text-xs sm:text-sm font-bold uppercase text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors underline underline-offset-4"
+        >
+          <Share2 class="w-4 h-4" /> {{ shareCopied ? 'Ссылка скопирована!' : 'Поделиться результатом' }}
+        </button>
       </div>
-
-      <!-- Экран результата: ЧЕРЕПАХА -->
       <div
         v-else-if="result === 'turtle'"
         class="text-center space-y-4 sm:space-y-6 animate-fade-in"
@@ -268,6 +306,12 @@ const programs = {
             <RotateCcw class="w-5 h-5 sm:w-6 sm:h-6" /> Заново
           </button>
         </div>
+        <button
+          @click="shareResult('turtle')"
+          class="inline-flex items-center justify-center gap-2 mx-auto text-xs sm:text-sm font-bold uppercase text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors underline underline-offset-4"
+        >
+          <Share2 class="w-4 h-4" /> {{ shareCopied ? 'Ссылка скопирована!' : 'Поделиться результатом' }}
+        </button>
       </div>
 
       <!-- Экран результата: НИЧЬЯ -->
@@ -301,7 +345,7 @@ const programs = {
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-2 sm:pt-4 px-2 sm:px-0">
           <div
-            class="border-2 border-black shadow-pixel p-3 sm:p-4 bg-white/60 dark:bg-darkBg/60 backdrop-blur-sm transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
+            class="h-full flex flex-col border-2 border-black shadow-pixel p-3 sm:p-4 bg-white/60 dark:bg-darkBg/60 backdrop-blur-sm transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
           >
             <h4
               class="font-bold uppercase mb-1 sm:mb-2 text-sm sm:text-base"
@@ -313,14 +357,14 @@ const programs = {
             <p class="text-xs sm:text-sm mb-2 sm:mb-3">{{ programs.duck.doc }}</p>
             <button
               @click="selectTrack('duck')"
-              class="block w-full text-center bg-school21 hover:bg-school21dark text-black font-bold py-2.5 px-4 border-2 border-black shadow-pixel-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-xs sm:text-sm min-h-[44px] flex items-center justify-center"
+              class="mt-auto block w-full text-center bg-school21 hover:bg-school21dark text-black font-bold py-2.5 px-4 border-2 border-black shadow-pixel-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-xs sm:text-sm min-h-[44px] flex items-center justify-center"
             >
               Выбрать
             </button>
           </div>
 
           <div
-            class="border-2 border-black shadow-pixel p-3 sm:p-4 bg-white/60 dark:bg-darkBg/60 backdrop-blur-sm transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
+            class="h-full flex flex-col border-2 border-black shadow-pixel p-3 sm:p-4 bg-white/60 dark:bg-darkBg/60 backdrop-blur-sm transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
           >
             <h4
               class="font-bold uppercase mb-1 sm:mb-2 text-sm sm:text-base"
@@ -332,20 +376,28 @@ const programs = {
             <p class="text-xs sm:text-sm mb-2 sm:mb-3">{{ programs.turtle.doc }}</p>
             <button
               @click="selectTrack('turtle')"
-              class="block w-full text-center bg-school21 hover:bg-school21dark text-black font-bold py-2.5 px-4 border-2 border-black shadow-pixel-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-xs sm:text-sm min-h-[44px] flex items-center justify-center"
+              class="mt-auto block w-full text-center bg-school21 hover:bg-school21dark text-black font-bold py-2.5 px-4 border-2 border-black shadow-pixel-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-xs sm:text-sm min-h-[44px] flex items-center justify-center"
             >
               Выбрать
             </button>
           </div>
         </div>
 
-        <button
-          @click="resetQuiz"
-          class="inline-flex items-center justify-center gap-2 bg-white/60 dark:bg-darkBg/60 hover:bg-gray-300 dark:hover:bg-gray-600 text-black dark:text-white font-bold py-2.5 px-6 border-2 border-black shadow-pixel hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-xs sm:text-sm min-h-[44px] mt-2 sm:mt-4"
-        >
-          <RotateCcw class="w-4 h-4 sm:w-5 sm:h-5" />
-          Пройти заново
-        </button>
+        <div class="flex flex-col items-center gap-3 sm:gap-4 mt-2 sm:mt-4">
+          <button
+            @click="resetQuiz"
+            class="inline-flex items-center justify-center gap-2 bg-white/60 dark:bg-darkBg/60 hover:bg-gray-300 dark:hover:bg-gray-600 text-black dark:text-white font-bold py-2.5 px-6 border-2 border-black shadow-pixel hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-xs sm:text-sm min-h-[44px]"
+          >
+            <RotateCcw class="w-4 h-4 sm:w-5 sm:h-5" />
+            Пройти заново
+          </button>
+          <button
+            @click="shareResult('tie')"
+            class="inline-flex items-center justify-center gap-2 text-xs sm:text-sm font-bold uppercase text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors underline underline-offset-4"
+          >
+            <Share2 class="w-4 h-4" /> {{ shareCopied ? 'Ссылка скопирована!' : 'Поделиться результатом' }}
+          </button>
+        </div>
       </div>
     </div>
   </section>
