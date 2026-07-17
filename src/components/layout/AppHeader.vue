@@ -152,10 +152,7 @@ onUnmounted(() => {
           </a>
           <a
             href="#register"
-            @click.stop="
-              menuOpen = false
-              trackGoal('register_button_clicked', { source: 'header_mobile' })
-            "
+            @click.stop="menuOpen = false; trackGoal('register_button_clicked', { source: 'header_mobile' })"
             class="w-full max-w-xs text-center bg-school21 hover:bg-school21dark text-black font-bold py-3 border-2 border-black shadow-pixel uppercase text-lg"
           >
             Регистрация
