@@ -120,31 +120,31 @@
       <!-- Водоплавающие утки и черепахи (анимированные) -->
       <!-- Утка 1 -->
       <div class="absolute bottom-16 animate-[swimRight_22s_linear_infinite]" style="animation-delay: -5s">
-        <div class="animate-[bob_3s_ease-in-out_infinite] cursor-pointer" @click="handleDuckClick($event.currentTarget, 'duck')">
+        <div class="animate-[bob_3s_ease-in-out_infinite] cursor-pointer" @click="handleDuckClick(($event.currentTarget as HTMLElement), 'duck')">
           <DuckSprite class="w-16 h-16 sm:w-20 sm:h-20" />
         </div>
       </div>
       <!-- Черепаха 1 -->
       <div class="absolute bottom-24 animate-[swimLeft_35s_linear_infinite]" style="animation-delay: -12s">
-        <div class="animate-[bob_4s_ease-in-out_infinite] cursor-pointer" @click="handleDuckClick($event.currentTarget, 'turtle')">
+        <div class="animate-[bob_4s_ease-in-out_infinite] cursor-pointer" @click="handleDuckClick(($event.currentTarget as HTMLElement), 'turtle')">
           <TurtleSprite class="w-16 h-16 sm:w-20 sm:h-20" />
         </div>
       </div>
       <!-- Утка 2 -->
       <div class="absolute bottom-36 animate-[swimLeft_28s_linear_infinite]" style="animation-delay: -20s">
-        <div class="animate-[bob_3.5s_ease-in-out_infinite] cursor-pointer" @click="handleDuckClick($event.currentTarget, 'duck')">
+        <div class="animate-[bob_3.5s_ease-in-out_infinite] cursor-pointer" @click="handleDuckClick(($event.currentTarget as HTMLElement), 'duck')">
           <DuckSprite class="w-10 h-10 sm:w-12 sm:h-12" />
         </div>
       </div>
       <!-- Черепаха 2 -->
       <div class="absolute bottom-40 animate-[swimRight_45s_linear_infinite]" style="animation-delay: -30s">
-        <div class="animate-[bob_4.5s_ease-in-out_infinite] cursor-pointer" @click="handleDuckClick($event.currentTarget, 'turtle')">
+        <div class="animate-[bob_4.5s_ease-in-out_infinite] cursor-pointer" @click="handleDuckClick(($event.currentTarget as HTMLElement), 'turtle')">
           <TurtleSprite class="w-10 h-10 sm:w-12 sm:h-12" />
         </div>
       </div>
       <!-- Утка 3 -->
       <div class="absolute bottom-28 animate-[swimRight_32s_linear_infinite]" style="animation-delay: -18s">
-        <div class="animate-[bob_3.2s_ease-in-out_infinite] cursor-pointer" @click="handleDuckClick($event.currentTarget, 'duck')">
+        <div class="animate-[bob_3.2s_ease-in-out_infinite] cursor-pointer" @click="handleDuckClick(($event.currentTarget as HTMLElement), 'duck')">
           <DuckSprite class="w-12 h-12 sm:w-14 sm:h-14" />
         </div>
       </div>

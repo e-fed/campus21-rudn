@@ -159,7 +159,7 @@ function toggleAiMode() {
 type Role = 'user' | 'assistant'
 const aiHistory = ref<Array<{ role: Role; content: string }>>([])
 
-async function askAi(question: string): Promise<string | null> {
+async function askAi(question: string, attempt = 1): Promise<string | null> {
   const controller = new AbortController()
   const timeoutId = setTimeout(() => controller.abort(), 12000)
 
