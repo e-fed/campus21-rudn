@@ -7,7 +7,7 @@ const riverState = ref<{
   quizCompleted: boolean
 }>({
   selectedTrack: null,
-  quizCompleted: false
+  quizCompleted: false,
 })
 
 export function provideRiverState() {

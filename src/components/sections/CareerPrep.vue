@@ -13,7 +13,9 @@
           :style="{ transitionDelay: index * 0.1 + 's' }"
         >
           <div class="flex items-start gap-4">
-            <div class="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-school21 border-2 border-black flex items-center justify-center group transition-transform duration-300 hover:scale-110">
+            <div
+              class="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-school21 border-2 border-black flex items-center justify-center group transition-transform duration-300 hover:scale-110"
+            >
               <span class="text-xl sm:text-2xl font-bold text-black">{{ index + 1 }}</span>
             </div>
             <div>
@@ -31,10 +33,22 @@
 import { onMounted, onUnmounted } from 'vue'
 
 const benefits = [
-  { title: 'Освоишь технические и HR-собеседования', desc: 'Подготовка к техническим интервью и встречам с HR' },
-  { title: 'Выйдешь с готовой стратегией трудоустройства', desc: 'Индивидуальный план поиска работы' },
-  { title: 'Создашь резюме и портфолио с реальными проектами', desc: 'Работы, которые можно показать работодателю' },
-  { title: 'Научишься презентовать себя на рынке труда', desc: 'Навыки самопрезентации и переговоров' }
+  {
+    title: 'Освоишь технические и HR-собеседования',
+    desc: 'Подготовка к техническим интервью и встречам с HR',
+  },
+  {
+    title: 'Выйдешь с готовой стратегией трудоустройства',
+    desc: 'Индивидуальный план поиска работы',
+  },
+  {
+    title: 'Создашь резюме и портфолио с реальными проектами',
+    desc: 'Работы, которые можно показать работодателю',
+  },
+  {
+    title: 'Научишься презентовать себя на рынке труда',
+    desc: 'Навыки самопрезентации и переговоров',
+  },
 ]
 
 // Анимация появления с таймером для плавного скрытия
@@ -62,7 +76,7 @@ onMounted(() => {
         }
       })
     },
-    { threshold: 0.2 }
+    { threshold: 0.2 },
   )
 
   document.querySelectorAll('.benefit-card').forEach((el) => observer?.observe(el))
@@ -78,7 +92,11 @@ onUnmounted(() => {
 .benefit-card {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.2s, transform 0.2s;
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease,
+    box-shadow 0.2s,
+    transform 0.2s;
 }
 
 .benefit-card.is-visible {

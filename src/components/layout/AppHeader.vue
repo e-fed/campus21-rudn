@@ -81,7 +81,7 @@ onUnmounted(() => {
            как на мобильных — тесноты и наложений там больше не будет ни при каких условиях. -->
       <nav
         class="hidden lg:flex items-center gap-2 xl:gap-4 min-w-0 max-w-[70vw]"
-        style="overflow-x: auto; white-space: nowrap; scrollbar-width: none;"
+        style="overflow-x: auto; white-space: nowrap; scrollbar-width: none"
       >
         <a
           v-for="item in navItems"
@@ -152,7 +152,10 @@ onUnmounted(() => {
           </a>
           <a
             href="#register"
-            @click.stop="menuOpen = false; trackGoal('register_button_clicked', { source: 'header_mobile' })"
+            @click.stop="
+              menuOpen = false
+              trackGoal('register_button_clicked', { source: 'header_mobile' })
+            "
             class="w-full max-w-xs text-center bg-school21 hover:bg-school21dark text-black font-bold py-3 border-2 border-black shadow-pixel uppercase text-lg"
           >
             Регистрация

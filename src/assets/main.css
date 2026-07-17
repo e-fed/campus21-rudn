@@ -12,7 +12,7 @@ body {
 }
 
 /* Пиксельный рендеринг только для SVG-спрайтов с crispEdges */
-svg[shape-rendering="crispEdges"],
+svg[shape-rendering='crispEdges'],
 .pixel-art {
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
@@ -30,16 +30,16 @@ svg[shape-rendering="crispEdges"],
 
 /* Цветовые переменные */
 :root {
-  --color-school21: #44EB99;        /* основной акцент (зелёный в светлой теме) */
-  --color-school21dark: #18DD7C;    /* тёмный зелёный */
-  --color-school21purple: #861BE3;  /* вторичный акцент (фиолетовый в светлой теме) */
+  --color-school21: #44eb99; /* основной акцент (зелёный в светлой теме) */
+  --color-school21dark: #18dd7c; /* тёмный зелёный */
+  --color-school21purple: #861be3; /* вторичный акцент (фиолетовый в светлой теме) */
   --flow-stroke: rgba(0, 0, 0, 0.6);
 }
 
 .dark {
-  --color-school21: #861BE3;        /* основной акцент (фиолетовый в тёмной теме) */
-  --color-school21dark: #6A1B9A;    /* тёмный фиолетовый */
-  --color-school21purple: #44EB99;  /* вторичный акцент (зелёный в тёмной теме) */
+  --color-school21: #861be3; /* основной акцент (фиолетовый в тёмной теме) */
+  --color-school21dark: #6a1b9a; /* тёмный фиолетовый */
+  --color-school21purple: #44eb99; /* вторичный акцент (зелёный в тёмной теме) */
   --flow-stroke: rgba(255, 255, 255, 0.7);
 }
 
@@ -54,8 +54,12 @@ svg[shape-rendering="crispEdges"],
 
 /* ===== Анимации ===== */
 @keyframes clouds {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-120%); }
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-120%);
+  }
 }
 
 .animate-clouds {
@@ -63,25 +67,47 @@ svg[shape-rendering="crispEdges"],
 }
 
 @keyframes swimRight {
-  0% { transform: translateX(-30%); }
-  100% { transform: translateX(130%); }
+  0% {
+    transform: translateX(-30%);
+  }
+  100% {
+    transform: translateX(130%);
+  }
 }
 
 @keyframes swimLeft {
-  0% { transform: translateX(130%); }
-  100% { transform: translateX(-30%); }
+  0% {
+    transform: translateX(130%);
+  }
+  100% {
+    transform: translateX(-30%);
+  }
 }
 
 @keyframes bob {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  25% { transform: translateY(-4px) rotate(-2deg); }
-  50% { transform: translateY(0) rotate(0deg); }
-  75% { transform: translateY(4px) rotate(2deg); }
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-4px) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(0) rotate(0deg);
+  }
+  75% {
+    transform: translateY(4px) rotate(2deg);
+  }
 }
 
 @keyframes breathe {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.03); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
 }
 
 .animate-breathe {
@@ -89,8 +115,13 @@ svg[shape-rendering="crispEdges"],
 }
 
 @keyframes bounce-right {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(4px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(4px);
+  }
 }
 
 .animate-bounce-right {

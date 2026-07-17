@@ -13,7 +13,7 @@ gsap.registerPlugin(ScrollTrigger)
 
 const riverState = useRiverState()
 const MascotComponent = computed(() =>
-  riverState.value.selectedTrack === 'turtle' ? TurtleSprite : DuckSprite
+  riverState.value.selectedTrack === 'turtle' ? TurtleSprite : DuckSprite,
 )
 const isTurtle = computed(() => riverState.value.selectedTrack === 'turtle')
 
@@ -39,11 +39,23 @@ function setup() {
     start: 'top center',
     endTrigger: endEl,
     end: 'bottom center',
-    onEnter: () => { isRiverPanelActive.value = true; showBubble.value = true },
-    onLeave: () => { isRiverPanelActive.value = false; showBubble.value = false },
-    onEnterBack: () => { isRiverPanelActive.value = true; showBubble.value = true },
-    onLeaveBack: () => { isRiverPanelActive.value = false; showBubble.value = false },
-    onUpdate: self => {
+    onEnter: () => {
+      isRiverPanelActive.value = true
+      showBubble.value = true
+    },
+    onLeave: () => {
+      isRiverPanelActive.value = false
+      showBubble.value = false
+    },
+    onEnterBack: () => {
+      isRiverPanelActive.value = true
+      showBubble.value = true
+    },
+    onLeaveBack: () => {
+      isRiverPanelActive.value = false
+      showBubble.value = false
+    },
+    onUpdate: (self) => {
       if (!trackRef.value || !mascotWrapperRef.value) return
       const trackHeight = trackRef.value.clientHeight
       // Явный clamp — доп. страховка, чтобы маскот физически не мог оказаться
@@ -117,7 +129,12 @@ function onMascotClick() {
   handleDuckClick(mascotRef.value, mascotType)
 }
 
-interface PixelRect { x: number; y: number; w: number; h: number }
+interface PixelRect {
+  x: number
+  y: number
+  w: number
+  h: number
+}
 
 function buildPixelRows(rows: number[], totalCols: number, unit: number): PixelRect[] {
   return rows.map((cols, i) => ({
@@ -142,31 +159,45 @@ const waterOuterRows = buildOffsetRows([8, 14, 16, 16, 14, 8], 2)
 const waterDeepRows = buildOffsetRows([10, 12, 12, 10], 3)
 
 function buildOffsetRows(rows: number[], rowOffset: number): number[] {
-  const full = new Array(ROWS).fill(0)
-  rows.forEach((v, i) => { full[i + rowOffset] = v })
+  const full = Array.from({ length: ROWS }, () => 0)
+  rows.forEach((v, i) => {
+    full[i + rowOffset] = v
+  })
   return full
 }
 
 const grassRects = buildPixelRows(grassRows, COLS, UNIT)
-const dirtRects = buildPixelRows(dirtRows, COLS, UNIT).filter(r => r.w > 0)
-const waterOuterRects = buildPixelRows(waterOuterRows, COLS, UNIT).filter(r => r.w > 0)
-const waterDeepRects = buildPixelRows(waterDeepRows, COLS, UNIT).filter(r => r.w > 0)
+const dirtRects = buildPixelRows(dirtRows, COLS, UNIT).filter((r) => r.w > 0)
+const waterOuterRects = buildPixelRows(waterOuterRows, COLS, UNIT).filter((r) => r.w > 0)
+const waterDeepRects = buildPixelRows(waterDeepRows, COLS, UNIT).filter((r) => r.w > 0)
 
 const LAKE_VIEWBOX_W = COLS * UNIT
 const LAKE_VIEWBOX_H = ROWS * UNIT
 
 const reeds = [
-  { x: UNIT, h: UNIT * 2.6 }, { x: UNIT * 2.4, h: UNIT * 3.4 },
-  { x: LAKE_VIEWBOX_W - UNIT * 1.8, h: UNIT * 3 }, { x: LAKE_VIEWBOX_W - UNIT * 3.2, h: UNIT * 2.2 },
+  { x: UNIT, h: UNIT * 2.6 },
+  { x: UNIT * 2.4, h: UNIT * 3.4 },
+  { x: LAKE_VIEWBOX_W - UNIT * 1.8, h: UNIT * 3 },
+  { x: LAKE_VIEWBOX_W - UNIT * 3.2, h: UNIT * 2.2 },
 ]
 
 // Блики — жёсткие пиксельные квадраты поверх воды (не blur), несколько штук
 // по обеим глубинам, чтобы поверхность читалась как рябь, а не плоская заливка.
 const shimmerSpots = [
   { x: waterOuterRects[1]?.x ?? 0, y: waterOuterRects[1]?.y ?? 0, w: UNIT * 1.4, dim: false },
-  { x: (waterOuterRects[2]?.x ?? 0) + UNIT * 3, y: (waterOuterRects[2]?.y ?? 0) + UNIT, w: UNIT, dim: true },
-  { x: (waterDeepRects[1]?.x ?? 0) + UNIT, y: (waterDeepRects[1]?.y ?? 0) + UNIT * 0.5, w: UNIT * 1.2, dim: false },
-  { x: (waterOuterRects[4]?.x ?? 0) + UNIT * 2, y: (waterOuterRects[4]?.y ?? 0), w: UNIT, dim: true },
+  {
+    x: (waterOuterRects[2]?.x ?? 0) + UNIT * 3,
+    y: (waterOuterRects[2]?.y ?? 0) + UNIT,
+    w: UNIT,
+    dim: true,
+  },
+  {
+    x: (waterDeepRects[1]?.x ?? 0) + UNIT,
+    y: (waterDeepRects[1]?.y ?? 0) + UNIT * 0.5,
+    w: UNIT * 1.2,
+    dim: false,
+  },
+  { x: (waterOuterRects[4]?.x ?? 0) + UNIT * 2, y: waterOuterRects[4]?.y ?? 0, w: UNIT, dim: true },
 ]
 
 const droplets = Array.from({ length: 16 }, (_, i) => ({
@@ -183,11 +214,13 @@ const droplets = Array.from({ length: 16 }, (_, i) => ({
        260px на lg (1024px+, там гарантированно достаточно gutter'а). -->
   <div
     class="hidden md:flex absolute left-2 lg:left-10 top-0 bottom-0 z-[1] flex-col items-center pointer-events-none river-mask"
-    style="width: 170px;"
+    style="width: 170px"
   >
     <div class="lg:!w-[260px] w-full flex flex-col items-center flex-1">
       <!-- ОЗЕРО-СТАРТ -->
-      <div class="relative w-56 h-32 lg:w-72 lg:h-40 shrink-0 mt-3 border-2 border-black shadow-pixel overflow-hidden">
+      <div
+        class="relative w-56 h-32 lg:w-72 lg:h-40 shrink-0 mt-3 border-2 border-black shadow-pixel overflow-hidden"
+      >
         <svg
           :viewBox="`0 0 ${LAKE_VIEWBOX_W} ${LAKE_VIEWBOX_H}`"
           class="w-full h-full"
@@ -208,13 +241,46 @@ const droplets = Array.from({ length: 16 }, (_, i) => ({
           </defs>
 
           <!-- Трава — только 1-пиксельная кайма по периметру -->
-          <rect v-for="(r, i) in grassRects" :key="'g' + i" :x="r.x" :y="r.y" :width="r.w" :height="r.h" fill="#4FA23C" />
+          <rect
+            v-for="(r, i) in grassRects"
+            :key="'g' + i"
+            :x="r.x"
+            :y="r.y"
+            :width="r.w"
+            :height="r.h"
+            fill="#4FA23C"
+          />
           <!-- Земля — тоже тонкая кайма, на 1 юнит уже -->
-          <rect v-for="(r, i) in dirtRects" :key="'d' + i" :x="r.x" :y="r.y" :width="r.w" :height="r.h" fill="#7A4E28" />
+          <rect
+            v-for="(r, i) in dirtRects"
+            :key="'d' + i"
+            :x="r.x"
+            :y="r.y"
+            :width="r.w"
+            :height="r.h"
+            fill="#7A4E28"
+          />
           <!-- Вода — основной массив, светлая версия -->
-          <rect v-for="(r, i) in waterOuterRects" :key="'wo' + i" :x="r.x" :y="r.y" :width="r.w" :height="r.h" fill="url(#lakeTopWater)" />
+          <rect
+            v-for="(r, i) in waterOuterRects"
+            :key="'wo' + i"
+            :x="r.x"
+            :y="r.y"
+            :width="r.w"
+            :height="r.h"
+            fill="url(#lakeTopWater)"
+          />
           <!-- Более тёмное "глубокое" ядро в центре — даёт эффект глубины -->
-          <rect v-for="(r, i) in waterDeepRects" :key="'wd' + i" :x="r.x" :y="r.y" :width="r.w" :height="r.h" fill="url(#lakeTopDeep)" opacity="0.55" />
+          <rect
+            v-for="(r, i) in waterDeepRects"
+            :key="'wd' + i"
+            :x="r.x"
+            :y="r.y"
+            :width="r.w"
+            :height="r.h"
+            fill="url(#lakeTopDeep)"
+            opacity="0.55"
+          />
 
           <!-- Блики: жёсткие квадраты, часть мигает (покадрово), часть статична -->
           <g>
@@ -231,13 +297,23 @@ const droplets = Array.from({ length: 16 }, (_, i) => ({
           </g>
 
           <g fill="#3E7A2F">
-            <rect v-for="(reed, i) in reeds" :key="i" :x="reed.x" :y="LAKE_VIEWBOX_H - reed.h - UNIT" width="5" :height="reed.h" />
+            <rect
+              v-for="(reed, i) in reeds"
+              :key="i"
+              :x="reed.x"
+              :y="LAKE_VIEWBOX_H - reed.h - UNIT"
+              width="5"
+              :height="reed.h"
+            />
           </g>
         </svg>
       </div>
 
       <!-- РУЧЕЁК -->
-      <div ref="trackRef" class="relative w-11 lg:w-14 flex-1 my-0 overflow-hidden border-x-2 border-black">
+      <div
+        ref="trackRef"
+        class="relative w-11 lg:w-14 flex-1 my-0 overflow-hidden border-x-2 border-black"
+      >
         <div class="absolute inset-0 stream-base" />
         <div class="absolute inset-0 stream-flow stream-flow--a" />
         <div class="absolute inset-0 stream-flow stream-flow--b" />
@@ -260,23 +336,30 @@ const droplets = Array.from({ length: 16 }, (_, i) => ({
         <div
           ref="mascotWrapperRef"
           class="absolute left-1/2 top-0 -translate-x-1/2 pointer-events-auto"
-          :style="{ width: MASCOT_SIZE + 'px', height: MASCOT_SIZE + 'px', willChange: 'transform' }"
+          :style="{
+            width: MASCOT_SIZE + 'px',
+            height: MASCOT_SIZE + 'px',
+            willChange: 'transform',
+          }"
         >
           <div class="mascot-shadow" />
-          <div ref="mascotRef" class="w-full h-full cursor-pointer select-none relative z-10" @click="onMascotClick">
+          <div
+            ref="mascotRef"
+            class="w-full h-full cursor-pointer select-none relative z-10"
+            @click="onMascotClick"
+          >
             <component :is="MascotComponent" class="w-full h-full" />
           </div>
 
           <a
             href="#register"
             @click="trackGoal('duck_bubble_register_clicked', { source: 'desktop_panel' })"
-            class="duck-bubble duck-bubble--right absolute top-1/2 left-full -translate-y-1/2 ml-3
-                   bg-school21 hover:bg-school21dark text-black font-bold
-                   text-xs leading-tight py-1.5 px-2.5
-                   border-2 border-black shadow-pixel-sm
-                   hover:shadow-none transition-all duration-300
-                   whitespace-nowrap uppercase z-20"
-            :class="showBubble ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-75 pointer-events-none'"
+            class="duck-bubble duck-bubble--right absolute top-1/2 left-full -translate-y-1/2 ml-3 bg-school21 hover:bg-school21dark text-black font-bold text-xs leading-tight py-1.5 px-2.5 border-2 border-black shadow-pixel-sm hover:shadow-none transition-all duration-300 whitespace-nowrap uppercase z-20"
+            :class="
+              showBubble
+                ? 'opacity-100 scale-100 pointer-events-auto'
+                : 'opacity-0 scale-75 pointer-events-none'
+            "
           >
             Записаться!
           </a>
@@ -284,7 +367,9 @@ const droplets = Array.from({ length: 16 }, (_, i) => ({
       </div>
 
       <!-- ОЗЕРО-ФИНИШ -->
-      <div class="relative w-56 h-32 lg:w-72 lg:h-40 shrink-0 mb-3 border-2 border-black shadow-pixel overflow-hidden">
+      <div
+        class="relative w-56 h-32 lg:w-72 lg:h-40 shrink-0 mb-3 border-2 border-black shadow-pixel overflow-hidden"
+      >
         <svg
           :viewBox="`0 0 ${LAKE_VIEWBOX_W} ${LAKE_VIEWBOX_H}`"
           class="w-full h-full"
@@ -303,10 +388,43 @@ const droplets = Array.from({ length: 16 }, (_, i) => ({
             </linearGradient>
           </defs>
 
-          <rect v-for="(r, i) in grassRects" :key="'g' + i" :x="r.x" :y="r.y" :width="r.w" :height="r.h" fill="#4FA23C" />
-          <rect v-for="(r, i) in dirtRects" :key="'d' + i" :x="r.x" :y="r.y" :width="r.w" :height="r.h" fill="#7A4E28" />
-          <rect v-for="(r, i) in waterOuterRects" :key="'wo' + i" :x="r.x" :y="r.y" :width="r.w" :height="r.h" fill="url(#lakeBottomWater)" />
-          <rect v-for="(r, i) in waterDeepRects" :key="'wd' + i" :x="r.x" :y="r.y" :width="r.w" :height="r.h" fill="url(#lakeBottomDeep)" opacity="0.55" />
+          <rect
+            v-for="(r, i) in grassRects"
+            :key="'g' + i"
+            :x="r.x"
+            :y="r.y"
+            :width="r.w"
+            :height="r.h"
+            fill="#4FA23C"
+          />
+          <rect
+            v-for="(r, i) in dirtRects"
+            :key="'d' + i"
+            :x="r.x"
+            :y="r.y"
+            :width="r.w"
+            :height="r.h"
+            fill="#7A4E28"
+          />
+          <rect
+            v-for="(r, i) in waterOuterRects"
+            :key="'wo' + i"
+            :x="r.x"
+            :y="r.y"
+            :width="r.w"
+            :height="r.h"
+            fill="url(#lakeBottomWater)"
+          />
+          <rect
+            v-for="(r, i) in waterDeepRects"
+            :key="'wd' + i"
+            :x="r.x"
+            :y="r.y"
+            :width="r.w"
+            :height="r.h"
+            fill="url(#lakeBottomDeep)"
+            opacity="0.55"
+          />
 
           <g>
             <rect
@@ -322,10 +440,24 @@ const droplets = Array.from({ length: 16 }, (_, i) => ({
           </g>
 
           <g fill="#3E7A2F">
-            <rect v-for="(reed, i) in reeds" :key="i" :x="reed.x" :y="LAKE_VIEWBOX_H - reed.h - UNIT" width="5" :height="reed.h" />
+            <rect
+              v-for="(reed, i) in reeds"
+              :key="i"
+              :x="reed.x"
+              :y="LAKE_VIEWBOX_H - reed.h - UNIT"
+              width="5"
+              :height="reed.h"
+            />
           </g>
 
-          <g :transform="isTurtle ? `translate(${LAKE_VIEWBOX_W / 2 - 14}, ${LAKE_VIEWBOX_H - UNIT * 3.4}) scale(1.5)` : `translate(${LAKE_VIEWBOX_W / 2 - 14}, ${LAKE_VIEWBOX_H - UNIT * 3}) scale(1.5)`" opacity="0.85">
+          <g
+            :transform="
+              isTurtle
+                ? `translate(${LAKE_VIEWBOX_W / 2 - 14}, ${LAKE_VIEWBOX_H - UNIT * 3.4}) scale(1.5)`
+                : `translate(${LAKE_VIEWBOX_W / 2 - 14}, ${LAKE_VIEWBOX_H - UNIT * 3}) scale(1.5)`
+            "
+            opacity="0.85"
+          >
             <rect v-if="isTurtle" width="26" height="15" fill="#861BE3" />
             <rect v-else width="24" height="13" fill="#F4F4F9" />
           </g>
@@ -337,8 +469,20 @@ const droplets = Array.from({ length: 16 }, (_, i) => ({
 
 <style scoped>
 .river-mask {
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0, black 40px, black calc(100% - 40px), transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0, black 40px, black calc(100% - 40px), transparent 100%);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    black 40px,
+    black calc(100% - 40px),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    black 40px,
+    black calc(100% - 40px),
+    transparent 100%
+  );
 }
 
 /* Покадровое мерцание бликов на воде — два разных ритма, чтобы не мигало синхронно */
@@ -356,17 +500,23 @@ const droplets = Array.from({ length: 16 }, (_, i) => ({
   animation-delay: 0.3s;
 }
 @keyframes shimmer-toggle {
-  0%, 49% { opacity: 1; }
-  50%, 100% { opacity: 0.25; }
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0.25;
+  }
 }
 
 .stream-base {
   background-image: repeating-linear-gradient(
     to bottom,
-    #0670C9 0px,
-    #0670C9 10px,
-    #12C4E8 10px,
-    #12C4E8 20px
+    #0670c9 0px,
+    #0670c9 10px,
+    #12c4e8 10px,
+    #12c4e8 20px
   );
 }
 .stream-flow {
@@ -399,12 +549,20 @@ const droplets = Array.from({ length: 16 }, (_, i) => ({
   animation-duration: 0.5s;
 }
 @keyframes stream-shift-a {
-  from { background-position-y: -30px; }
-  to { background-position-y: 0; }
+  from {
+    background-position-y: -30px;
+  }
+  to {
+    background-position-y: 0;
+  }
 }
 @keyframes stream-shift-b {
-  from { background-position-y: -18px; }
-  to { background-position-y: 0; }
+  from {
+    background-position-y: -18px;
+  }
+  to {
+    background-position-y: 0;
+  }
 }
 
 .droplet {
@@ -416,9 +574,17 @@ const droplets = Array.from({ length: 16 }, (_, i) => ({
   animation-iteration-count: infinite;
 }
 @keyframes droplet-fall {
-  0% { transform: translateY(-10px); opacity: 1; }
-  85% { opacity: 1; }
-  100% { transform: translateY(340px); opacity: 0; }
+  0% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(340px);
+    opacity: 0;
+  }
 }
 
 .mascot-shadow {
@@ -439,7 +605,9 @@ const droplets = Array.from({ length: 16 }, (_, i) => ({
   }
 }
 
-.duck-bubble { position: absolute; }
+.duck-bubble {
+  position: absolute;
+}
 .duck-bubble--right::before,
 .duck-bubble--right::after {
   content: '';

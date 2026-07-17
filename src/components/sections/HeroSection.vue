@@ -1,8 +1,10 @@
 <template>
-  <section ref="heroSectionRef" class="min-h-[100dvh] flex flex-col items-center justify-between px-4 text-center relative overflow-hidden bg-gradient-to-b from-sky-200 via-blue-100 to-cyan-200 dark:from-sky-900 dark:via-blue-950 dark:to-cyan-950">
-    
+  <section
+    ref="heroSectionRef"
+    class="min-h-[100dvh] flex flex-col items-center justify-between px-4 text-center relative overflow-hidden bg-gradient-to-b from-sky-200 via-blue-100 to-cyan-200 dark:from-sky-900 dark:via-blue-950 dark:to-cyan-950"
+  >
     <!-- Солнце (светлая тема) – динамический z-index -->
-    <button 
+    <button
       ref="sunButton"
       class="absolute top-6 right-6 sm:top-10 sm:right-10 dark:hidden cursor-pointer bg-transparent border-0 p-0"
       :style="{ zIndex: sunBlocked ? 5 : 20 }"
@@ -23,7 +25,7 @@
     </button>
 
     <!-- Луна (тёмная тема) – динамический z-index -->
-    <button 
+    <button
       ref="moonButton"
       class="absolute top-6 right-6 sm:top-10 sm:right-10 hidden dark:block cursor-pointer bg-transparent border-0 p-0"
       :style="{ zIndex: moonBlocked ? 5 : 20 }"
@@ -41,40 +43,53 @@
     </button>
 
     <!-- Облака  -->
-    <div 
-      v-for="(cloud, index) in clouds" 
+    <div
+      v-for="(cloud, index) in clouds"
       :key="index"
-      :ref="el => { if (el) cloudRefs[index] = el as HTMLElement }"
+      :ref="
+        (el) => {
+          if (el) cloudRefs[index] = el as HTMLElement
+        }
+      "
       class="absolute animate-cloud-rtl pointer-events-none"
       :class="isDark ? 'bg-white/60' : 'bg-gray-300/80'"
-      style="z-index: 20;"
+      style="z-index: 20"
       :style="{
         top: cloud.top,
         right: cloud.right,
         width: cloud.width,
         height: cloud.height,
         animationDuration: cloud.duration + 's',
-        animationDelay: cloud.delay + 's'
+        animationDelay: cloud.delay + 's',
       }"
     ></div>
 
     <!-- Заголовок и кнопки (z-10, под облаками) -->
     <div class="relative z-10 pt-16 sm:pt-24 md:pt-32 flex flex-col items-center w-full">
-      <h1 class="text-4xl sm:text-5xl md:text-7xl font-bold mb-4 md:mb-6 uppercase tracking-wider leading-tight max-w-4xl">
-        Научись создавать <br>
-        <span class="text-school21">будущее</span> с помощью <span class="text-school21purple">ИИ</span>
+      <h1
+        class="text-4xl sm:text-5xl md:text-7xl font-bold mb-4 md:mb-6 uppercase tracking-wider leading-tight max-w-4xl"
+      >
+        Научись создавать <br />
+        <span class="text-school21">будущее</span> с помощью
+        <span class="text-school21purple">ИИ</span>
       </h1>
-      <p class="text-lg sm:text-xl md:text-2xl text-gray-700 dark:text-gray-200 max-w-2xl mb-6 md:mb-8 px-2">
+      <p
+        class="text-lg sm:text-xl md:text-2xl text-gray-700 dark:text-gray-200 max-w-2xl mb-6 md:mb-8 px-2"
+      >
         Совместный кампус РУДН и «Школы 21». Синергия науки, индустрии и практики.
       </p>
       <div class="flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-2 sm:px-0">
-        <a 
+        <a
           href="#register"
           @click="trackGoal('register_button_clicked', { source: 'hero' })"
-          class="w-full sm:w-auto bg-school21 hover:bg-school21dark text-black font-bold py-3 px-8 border-2 border-black shadow-pixel hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-lg sm:text-xl">
+          class="w-full sm:w-auto bg-school21 hover:bg-school21dark text-black font-bold py-3 px-8 border-2 border-black shadow-pixel hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-lg sm:text-xl"
+        >
           Подать заявку
         </a>
-        <a href="#tracks" class="w-full sm:w-auto bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-black dark:text-white font-bold py-3 px-8 border-2 border-black shadow-pixel hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-lg sm:text-xl">
+        <a
+          href="#tracks"
+          class="w-full sm:w-auto bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-black dark:text-white font-bold py-3 px-8 border-2 border-black shadow-pixel hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-lg sm:text-xl"
+        >
           Выбрать трек
         </a>
       </div>
@@ -85,14 +100,25 @@
       <!-- Берег и вода -->
       <div class="absolute bottom-0 left-0 right-0 h-8 bg-green-600 dark:bg-green-900"></div>
       <div class="absolute bottom-8 left-0 right-0 h-4 bg-green-500 dark:bg-green-800"></div>
-      <div class="absolute bottom-12 left-0 right-0 h-full bg-gradient-to-b from-blue-400 to-blue-600 dark:from-blue-700 dark:to-blue-900">
+      <div
+        class="absolute bottom-12 left-0 right-0 h-full bg-gradient-to-b from-blue-400 to-blue-600 dark:from-blue-700 dark:to-blue-900"
+      >
         <!-- Волны на воде (брызги) -->
         <div class="absolute top-4 left-10 w-8 h-2 bg-blue-300 opacity-60 animate-pulse"></div>
-        <div class="absolute top-8 left-1/3 w-6 h-2 bg-blue-300 opacity-40 animate-pulse" style="animation-delay: 0.5s"></div>
-        <div class="absolute top-6 right-20 w-10 h-2 bg-blue-300 opacity-50 animate-pulse" style="animation-delay: 1s"></div>
+        <div
+          class="absolute top-8 left-1/3 w-6 h-2 bg-blue-300 opacity-40 animate-pulse"
+          style="animation-delay: 0.5s"
+        ></div>
+        <div
+          class="absolute top-6 right-20 w-10 h-2 bg-blue-300 opacity-50 animate-pulse"
+          style="animation-delay: 1s"
+        ></div>
         <div class="absolute top-10 left-20 w-2 h-2 bg-white opacity-70 animate-bounce"></div>
-        <div class="absolute top-16 right-1/3 w-2 h-2 bg-white opacity-50 animate-bounce" style="animation-delay: 0.7s"></div>
-        
+        <div
+          class="absolute top-16 right-1/3 w-2 h-2 bg-white opacity-50 animate-bounce"
+          style="animation-delay: 0.7s"
+        ></div>
+
         <!-- Кувшинка 1 -->
         <div class="absolute bottom-16 left-1/2 opacity-90">
           <svg viewBox="0 0 20 12" class="w-14 h-10" shape-rendering="crispEdges">
@@ -110,7 +136,7 @@
           </svg>
         </div>
       </div>
-      
+
       <!-- Элементы на берегу -->
       <div class="absolute bottom-20 left-1/4 w-16 h-8 bg-green-700 dark:bg-green-950"></div>
       <div class="absolute bottom-28 left-1/4 w-12 h-4 bg-green-600 dark:bg-green-900"></div>
@@ -119,37 +145,71 @@
 
       <!-- Водоплавающие утки и черепахи (анимированные) -->
       <!-- Утка 1 -->
-      <div class="absolute bottom-16 animate-[swimRight_22s_linear_infinite]" style="animation-delay: -5s">
-        <div class="animate-[bob_3s_ease-in-out_infinite] cursor-pointer" @click="handleDuckClick(($event.currentTarget as HTMLElement), 'duck')">
+      <div
+        class="absolute bottom-16 animate-[swimRight_22s_linear_infinite]"
+        style="animation-delay: -5s"
+      >
+        <div
+          class="animate-[bob_3s_ease-in-out_infinite] cursor-pointer"
+          @click="handleDuckClick($event.currentTarget as HTMLElement, 'duck')"
+        >
           <DuckSprite class="w-16 h-16 sm:w-20 sm:h-20" />
         </div>
       </div>
       <!-- Черепаха 1 -->
-      <div class="absolute bottom-24 animate-[swimLeft_35s_linear_infinite]" style="animation-delay: -12s">
-        <div class="animate-[bob_4s_ease-in-out_infinite] cursor-pointer" @click="handleDuckClick(($event.currentTarget as HTMLElement), 'turtle')">
+      <div
+        class="absolute bottom-24 animate-[swimLeft_35s_linear_infinite]"
+        style="animation-delay: -12s"
+      >
+        <div
+          class="animate-[bob_4s_ease-in-out_infinite] cursor-pointer"
+          @click="handleDuckClick($event.currentTarget as HTMLElement, 'turtle')"
+        >
           <TurtleSprite class="w-16 h-16 sm:w-20 sm:h-20" />
         </div>
       </div>
       <!-- Утка 2 -->
-      <div class="absolute bottom-36 animate-[swimLeft_28s_linear_infinite]" style="animation-delay: -20s">
-        <div class="animate-[bob_3.5s_ease-in-out_infinite] cursor-pointer" @click="handleDuckClick(($event.currentTarget as HTMLElement), 'duck')">
+      <div
+        class="absolute bottom-36 animate-[swimLeft_28s_linear_infinite]"
+        style="animation-delay: -20s"
+      >
+        <div
+          class="animate-[bob_3.5s_ease-in-out_infinite] cursor-pointer"
+          @click="handleDuckClick($event.currentTarget as HTMLElement, 'duck')"
+        >
           <DuckSprite class="w-10 h-10 sm:w-12 sm:h-12" />
         </div>
       </div>
       <!-- Черепаха 2 -->
-      <div class="absolute bottom-40 animate-[swimRight_45s_linear_infinite]" style="animation-delay: -30s">
-        <div class="animate-[bob_4.5s_ease-in-out_infinite] cursor-pointer" @click="handleDuckClick(($event.currentTarget as HTMLElement), 'turtle')">
+      <div
+        class="absolute bottom-40 animate-[swimRight_45s_linear_infinite]"
+        style="animation-delay: -30s"
+      >
+        <div
+          class="animate-[bob_4.5s_ease-in-out_infinite] cursor-pointer"
+          @click="handleDuckClick($event.currentTarget as HTMLElement, 'turtle')"
+        >
           <TurtleSprite class="w-10 h-10 sm:w-12 sm:h-12" />
         </div>
       </div>
       <!-- Утка 3 -->
-      <div class="absolute bottom-28 animate-[swimRight_32s_linear_infinite]" style="animation-delay: -18s">
-        <div class="animate-[bob_3.2s_ease-in-out_infinite] cursor-pointer" @click="handleDuckClick(($event.currentTarget as HTMLElement), 'duck')">
+      <div
+        class="absolute bottom-28 animate-[swimRight_32s_linear_infinite]"
+        style="animation-delay: -18s"
+      >
+        <div
+          class="animate-[bob_3.2s_ease-in-out_infinite] cursor-pointer"
+          @click="handleDuckClick($event.currentTarget as HTMLElement, 'duck')"
+        >
           <DuckSprite class="w-12 h-12 sm:w-14 sm:h-14" />
         </div>
       </div>
     </div>
-    <div class="absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce text-3xl text-white z-20">▼</div>
+    <div
+      class="absolute bottom-4 left-1/2 -translate-x-1/2 animate-bounce text-3xl text-white z-20"
+    >
+      ▼
+    </div>
   </section>
 </template>
 
@@ -187,13 +247,10 @@ const clouds = [
 ]
 
 // Функция проверки перекрытия облаком кнопки
-function checkCloudOverlap(
-  targetButton: HTMLElement | null,
-  blockedRef: { value: boolean }
-) {
+function checkCloudOverlap(targetButton: HTMLElement | null, blockedRef: { value: boolean }) {
   if (!targetButton) return
   const btnRect = targetButton.getBoundingClientRect()
-  const isOverlapping = cloudRefs.value.some(cloud => {
+  const isOverlapping = cloudRefs.value.some((cloud) => {
     if (!cloud) return false
     const cloudRect = cloud.getBoundingClientRect()
     return !(
@@ -236,12 +293,12 @@ onMounted(() => {
     return
   }
   sectionObserver = new IntersectionObserver(
-    entries => {
+    (entries) => {
       const isVisible = entries[0]?.isIntersecting
       if (isVisible) startLoop()
       else stopLoop()
     },
-    { threshold: 0 }
+    { threshold: 0 },
   )
   sectionObserver.observe(heroSectionRef.value)
 })
@@ -251,14 +308,17 @@ onUnmounted(() => {
   sectionObserver?.disconnect()
   sectionObserver = null
 })
-
 </script>
 
 <style>
 /* Облака: медленно и хаотично */
 @keyframes cloud-rtl {
-  0% { right: -30%; }
-  100% { right: 120%; }
+  0% {
+    right: -30%;
+  }
+  100% {
+    right: 120%;
+  }
 }
 .animate-cloud-rtl {
   animation: cloud-rtl 180s linear infinite;

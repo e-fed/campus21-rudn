@@ -1,5 +1,8 @@
 <template>
-  <section id="register" class="relative min-h-screen flex items-center justify-center px-4 py-10 sm:py-16 border-t-2 border-black">
+  <section
+    id="register"
+    class="relative min-h-screen flex items-center justify-center px-4 py-10 sm:py-16 border-t-2 border-black"
+  >
     <div class="absolute inset-0 z-0 pointer-events-none bg-white/95 dark:bg-darkBg/95" />
 
     <div class="relative z-10 max-w-2xl w-full text-center space-y-6">
@@ -12,12 +15,12 @@
       </div>
 
       <!-- Добавлены атрибуты Netlify Forms: data-netlify, name, и скрытый input -->
-      <form 
+      <form
         v-else
         ref="formRef"
         name="registration"
         data-netlify="true"
-        @submit.prevent="handleSubmit" 
+        @submit.prevent="handleSubmit"
         class="form-block space-y-4 text-left bg-gray-100 dark:bg-[#161D27] border-2 border-black shadow-pixel p-6 sm:p-8"
       >
         <!-- Скрытое поле обязательно для Netlify Forms -->
@@ -38,19 +41,25 @@
         </div>
 
         <div class="flex items-start gap-3">
-          <input 
-            id="consent" 
-            v-model="consent" 
+          <input
+            id="consent"
+            v-model="consent"
             name="consent"
-            type="checkbox" 
-            class="mt-1 w-5 h-5 border-2 border-black flex-shrink-0 cursor-pointer" 
+            type="checkbox"
+            class="mt-1 w-5 h-5 border-2 border-black flex-shrink-0 cursor-pointer"
             :class="{ 'border-red-500': consentError }"
           />
-          <label for="consent" class="text-sm sm:text-base cursor-pointer select-none" :class="{ 'text-red-500': consentError }">
+          <label
+            for="consent"
+            class="text-sm sm:text-base cursor-pointer select-none"
+            :class="{ 'text-red-500': consentError }"
+          >
             Даю согласие на обработку персональных данных
           </label>
         </div>
-        <p v-if="consentError" class="text-red-500 text-sm font-bold text-right -mt-2">{{ consentError }}</p>
+        <p v-if="consentError" class="text-red-500 text-sm font-bold text-right -mt-2">
+          {{ consentError }}
+        </p>
 
         <button
           type="submit"
@@ -87,7 +96,7 @@ onMounted(() => {
         }
       })
     },
-    { threshold: 0.15 }
+    { threshold: 0.15 },
   )
   if (formRef.value) observer.observe(formRef.value)
 })
@@ -131,14 +140,14 @@ const handleSubmit = async (e: Event) => {
 
   // Отправка формы через Netlify Forms API
   const formData = new FormData(e.target as HTMLFormElement)
-  
+
   try {
     await fetch('/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams(formData as any).toString(),
+      body: new URLSearchParams(formData as unknown as Record<string, string>).toString(),
     })
-    
+
     trackGoal('form_submitted_success') // Email убран из параметров
     isSubmitted.value = true
     email.value = ''
@@ -154,7 +163,9 @@ const handleSubmit = async (e: Event) => {
 .form-block {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
 }
 .form-block.is-visible {
   opacity: 1;

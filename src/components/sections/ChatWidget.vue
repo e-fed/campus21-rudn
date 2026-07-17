@@ -16,7 +16,9 @@
         v-if="isOpen"
         class="bg-white dark:bg-darkBg border-2 border-black shadow-pixel w-80 sm:w-96 max-w-[calc(100vw-2rem)] h-96 flex flex-col rounded-2xl overflow-hidden"
       >
-        <div class="flex justify-between items-center p-3 border-b-2 border-black bg-school21/20 dark:bg-school21/10">
+        <div
+          class="flex justify-between items-center p-3 border-b-2 border-black bg-school21/20 dark:bg-school21/10"
+        >
           <div class="flex flex-col leading-tight">
             <span class="font-bold uppercase text-sm">FAQ-бот</span>
             <span class="text-[10px] normal-case font-normal opacity-70">
@@ -33,13 +35,20 @@
             >
               {{ aiMode === 'on' ? 'ИИ: вкл' : 'ИИ: выкл' }}
             </button>
-            <button @click="isOpen = false" aria-label="Закрыть чат" class="hover:text-school21 transition-colors">
+            <button
+              @click="isOpen = false"
+              aria-label="Закрыть чат"
+              class="hover:text-school21 transition-colors"
+            >
               <X class="w-5 h-5" />
             </button>
           </div>
         </div>
 
-        <div class="flex-1 overflow-y-auto p-3 space-y-3 bg-gray-50/50 dark:bg-gray-900/30" ref="messagesContainer">
+        <div
+          class="flex-1 overflow-y-auto p-3 space-y-3 bg-gray-50/50 dark:bg-gray-900/30"
+          ref="messagesContainer"
+        >
           <div
             v-for="msg in messages"
             :key="msg.id"
@@ -122,7 +131,12 @@ function saveCache() {
 }
 
 function normalizeForCache(s: string): string {
-  return s.toLowerCase().replace(/ё/g, 'е').replace(/[^a-zа-я0-9\s]/gi, '').replace(/\s+/g, ' ').trim()
+  return s
+    .toLowerCase()
+    .replace(/ё/g, 'е')
+    .replace(/[^a-zа-я0-9\s]/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim()
 }
 
 loadCache()
@@ -141,7 +155,9 @@ function readStoredMode(): AiMode {
 const aiMode = ref<AiMode>(readStoredMode())
 
 function persistMode(value: AiMode) {
-  try { localStorage.setItem(AI_MODE_KEY, value) } catch {}
+  try {
+    localStorage.setItem(AI_MODE_KEY, value)
+  } catch {}
 }
 
 function toggleAiMode() {
@@ -151,7 +167,10 @@ function toggleAiMode() {
   messages.value.push({
     id: Date.now().toString(),
     from: 'bot',
-    text: aiMode.value === 'on' ? 'Включаю ИИ-ответы.' : 'Отключаю ИИ-ответы, отвечаю по ключевым словам.',
+    text:
+      aiMode.value === 'on'
+        ? 'Включаю ИИ-ответы.'
+        : 'Отключаю ИИ-ответы, отвечаю по ключевым словам.',
   })
   scrollToBottom()
 }
@@ -170,23 +189,23 @@ async function askAi(question: string, attempt = 1): Promise<string | null> {
       body: JSON.stringify({ message: question, history: aiHistory.value }),
       signal: controller.signal,
     })
-    
+
     if (res.status === 429 && attempt <= 2) {
-        const data = await res.json().catch(() => ({}))
-        const retryAfter = data.retryAfter || 5
-        console.warn(`Rate limit. Попытка ${attempt}/2. Ждём ${retryAfter}с...`)
-        await new Promise(resolve => setTimeout(resolve, retryAfter * 1000))
-        return askAi(question, attempt + 1)
+      const data = await res.json().catch(() => ({}))
+      const retryAfter = data.retryAfter || 5
+      console.warn(`Rate limit. Попытка ${attempt}/2. Ждём ${retryAfter}с...`)
+      await new Promise((resolve) => setTimeout(resolve, retryAfter * 1000))
+      return askAi(question, attempt + 1)
     }
-    
+
     if (!res.ok) return null
     const data = (await res.json()) as { answer?: string }
     if (!data.answer) return null
-    
+
     aiHistory.value.push({ role: 'user', content: question })
     aiHistory.value.push({ role: 'assistant', content: data.answer })
     aiHistory.value = aiHistory.value.slice(-4)
-    
+
     return data.answer
   } catch (err) {
     console.warn('ИИ-сервер недоступен или таймаут:', err)
@@ -206,18 +225,107 @@ interface FaqEntry {
 const faqBank: FaqEntry[] = CAMPUS_FACTS_ARRAY as FaqEntry[]
 
 const stopWords = new Set([
-  'и', 'в', 'на', 'с', 'по', 'что', 'как', 'где', 'это', 'чтобы', 'для', 'у', 'а', 'к', 'от',
-  'мне', 'я', 'вы', 'ты', 'он', 'она', 'ли', 'же', 'то', 'из', 'при', 'до', 'но', 'или', 'бы',
-  'есть', 'будет', 'нужно', 'можно', 'какой', 'какая', 'какие', 'про',
+  'и',
+  'в',
+  'на',
+  'с',
+  'по',
+  'что',
+  'как',
+  'где',
+  'это',
+  'чтобы',
+  'для',
+  'у',
+  'а',
+  'к',
+  'от',
+  'мне',
+  'я',
+  'вы',
+  'ты',
+  'он',
+  'она',
+  'ли',
+  'же',
+  'то',
+  'из',
+  'при',
+  'до',
+  'но',
+  'или',
+  'бы',
+  'есть',
+  'будет',
+  'нужно',
+  'можно',
+  'какой',
+  'какая',
+  'какие',
+  'про',
 ])
 
 function normalize(str: string): string {
-  return str.toLowerCase().replace(/ё/g, 'е').replace(/[^a-zа-я0-9\s]/gi, ' ').replace(/\s+/g, ' ').trim()
+  return str
+    .toLowerCase()
+    .replace(/ё/g, 'е')
+    .replace(/[^a-zа-я0-9\s]/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
 }
 
 function stem(word: string): string {
   if (word.length <= 4) return word
-  const suffixes = ['ями', 'ами', 'иях', 'иям', 'ого', 'его', 'ому', 'ему', 'ыми', 'ими', 'ешь', 'ете', 'ует', 'уют', 'ится', 'иться', 'ать', 'ять', 'еть', 'ить', 'ов', 'ев', 'ах', 'ях', 'ей', 'ой', 'ый', 'ий', 'ая', 'яя', 'ое', 'ее', 'ую', 'юю', 'ем', 'им', 'ам', 'ям', 'ю', 'я', 'ы', 'и', 'а', 'о', 'у', 'е', 'й', 'ь']
+  const suffixes = [
+    'ями',
+    'ами',
+    'иях',
+    'иям',
+    'ого',
+    'его',
+    'ому',
+    'ему',
+    'ыми',
+    'ими',
+    'ешь',
+    'ете',
+    'ует',
+    'уют',
+    'ится',
+    'иться',
+    'ать',
+    'ять',
+    'еть',
+    'ить',
+    'ов',
+    'ев',
+    'ах',
+    'ях',
+    'ей',
+    'ой',
+    'ый',
+    'ий',
+    'ая',
+    'яя',
+    'ое',
+    'ее',
+    'ую',
+    'юю',
+    'ем',
+    'им',
+    'ам',
+    'ям',
+    'ю',
+    'я',
+    'ы',
+    'и',
+    'а',
+    'о',
+    'у',
+    'е',
+    'й',
+    'ь',
+  ]
   for (const suf of suffixes) {
     if (word.length - suf.length >= 3 && word.endsWith(suf)) {
       return word.slice(0, word.length - suf.length)
@@ -227,11 +335,17 @@ function stem(word: string): string {
 }
 
 function tokenize(str: string): string[] {
-  return normalize(str).split(' ').filter(w => w.length > 1 && !stopWords.has(w)).map(stem)
+  return normalize(str)
+    .split(' ')
+    .filter((w) => w.length > 1 && !stopWords.has(w))
+    .map(stem)
 }
 
 function levenshtein(a: string, b: string): number {
-  const dp: number[][] = Array.from({ length: a.length + 1 }, () => new Array(b.length + 1).fill(0) as number[])
+  const dp: number[][] = Array.from(
+    { length: a.length + 1 },
+    () => Array.from({ length: b.length + 1 }, () => 0) as number[],
+  )
   for (let i = 0; i <= a.length; i++) dp[i]![0] = i
   for (let j = 0; j <= b.length; j++) dp[0]![j] = j
   for (let i = 1; i <= a.length; i++) {
@@ -250,7 +364,7 @@ function tokensMatch(a: string, b: string): boolean {
   return levenshtein(a, b) <= maxDist
 }
 
-const bankKeywordTokens = faqBank.map(entry => {
+const bankKeywordTokens = faqBank.map((entry) => {
   const kwTokens = new Set<string>()
   for (const kw of entry.keywords) {
     for (const t of tokenize(kw)) kwTokens.add(t)
@@ -291,7 +405,7 @@ function findBestMatches(question: string, limit = 3) {
   const lex = lexicalScores(question)
   return faqBank
     .map((entry, i) => ({ entry, score: lex[i] ?? 0 }))
-    .filter(r => r.score > 0.08)
+    .filter((r) => r.score > 0.08)
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
 }
@@ -300,7 +414,10 @@ function lexicalAnswerFor(question: string): { text: string; suggestions?: strin
   const matches = findBestMatches(question)
   const fallback = () => ({
     text: 'Хм, не нашёл точного ответа в базе. Напишите нам: 21-school@rudn.ru',
-    suggestions: [...faqBank].sort(() => Math.random() - 0.5).slice(0, 4).map(e => e.topic),
+    suggestions: [...faqBank]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 4)
+      .map((e) => e.topic),
   })
 
   const best = matches[0]
@@ -312,7 +429,7 @@ function lexicalAnswerFor(question: string): { text: string; suggestions?: strin
 
   return {
     text: `${best.entry.answer}\n\nЕсли вопрос был про другое — уточните тему:`,
-    suggestions: matches.map(m => m.entry.topic),
+    suggestions: matches.map((m) => m.entry.topic),
   }
 }
 
@@ -321,7 +438,7 @@ async function answerFor(question: string): Promise<{ text: string; suggestions?
   if (aiCache.has(normalized)) {
     return { text: aiCache.get(normalized)! }
   }
-  
+
   if (aiMode.value === 'on') {
     const aiAnswer = await askAi(question)
     if (aiAnswer) {
@@ -378,7 +495,7 @@ const sendMessage = async () => {
   const elapsed = Date.now() - start
   const minDelay = 400 + Math.random() * 300
   if (elapsed < minDelay) {
-    await new Promise(resolve => setTimeout(resolve, minDelay - elapsed))
+    await new Promise((resolve) => setTimeout(resolve, minDelay - elapsed))
   }
 
   messages.value.push({ id: (Date.now() + 1).toString(), from: 'bot', text: answer, suggestions })
@@ -388,8 +505,21 @@ const sendMessage = async () => {
 </script>
 
 <style scoped>
-.fade-enter-active, .fade-leave-active { transition: opacity 0.2s ease; }
-.fade-enter-from, .fade-leave-to { opacity: 0; }
-.slide-up-enter-active, .slide-up-leave-active { transition: all 0.3s ease; }
-.slide-up-enter-from, .slide-up-leave-to { opacity: 0; transform: translateY(20px); }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: all 0.3s ease;
+}
+.slide-up-enter-from,
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
+}
 </style>

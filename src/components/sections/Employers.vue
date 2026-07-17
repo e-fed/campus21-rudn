@@ -2,10 +2,10 @@
   <section class="py-12 sm:py-16 px-0 bg-gray-100 dark:bg-[#161D27] border-t-2 border-black">
     <div class="max-w-6xl mx-auto text-center px-4">
       <div class="fade-in-up">
-        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold uppercase mb-4">
-          Наши партнеры
-        </h2>
-        <p class="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-8 sm:mb-12 max-w-2xl mx-auto">
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold uppercase mb-4">Наши партнеры</h2>
+        <p
+          class="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-8 sm:mb-12 max-w-2xl mx-auto"
+        >
           Выпускники работают в ведущих IT-компаниях
         </p>
       </div>
@@ -19,7 +19,12 @@
             <div
               class="logo-card bg-gray-300 dark:bg-gray-600 border-2 border-black shadow-pixel p-4 sm:p-6 h-24 sm:h-32 w-40 sm:w-48 flex-shrink-0 flex items-center justify-center hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all mx-4"
             >
-              <img :src="logo" :alt="'Партнер ' + ((index % 5) + 1)" loading="lazy" class="max-w-full max-h-full object-contain" />
+              <img
+                :src="logo"
+                :alt="'Партнер ' + ((index % 5) + 1)"
+                loading="lazy"
+                class="max-w-full max-h-full object-contain"
+              />
             </div>
           </template>
         </div>
@@ -78,7 +83,7 @@ onMounted(() => {
         }
       })
     },
-    { threshold: 0.2 }
+    { threshold: 0.2 },
   )
 
   document.querySelectorAll('.fade-in-up').forEach((el) => observer?.observe(el))
@@ -114,13 +119,17 @@ onUnmounted(() => {
 }
 
 .logo-card {
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .fade-in-up {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
 }
 
 .fade-in-up.is-visible {

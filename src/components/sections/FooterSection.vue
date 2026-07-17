@@ -31,7 +31,9 @@ const onExternalClick = (type: string, event: Event) => {
           <ul class="space-y-2 text-sm sm:text-base">
             <li><a href="#about" class="hover:text-school21 transition-colors">О программе</a></li>
             <li><a href="#tracks" class="hover:text-school21 transition-colors">Треки</a></li>
-            <li><a href="#howto" class="hover:text-school21 transition-colors">Как поступить</a></li>
+            <li>
+              <a href="#howto" class="hover:text-school21 transition-colors">Как поступить</a>
+            </li>
             <li><a href="#faq" class="hover:text-school21 transition-colors">FAQ</a></li>
           </ul>
         </div>
@@ -58,7 +60,9 @@ const onExternalClick = (type: string, event: Event) => {
             </a>
           </div>
           <p class="text-sm sm:text-base">
-            <a href="mailto:21-school@rudn.ru" class="text-school21 hover:underline">21-school@rudn.ru</a>
+            <a href="mailto:21-school@rudn.ru" class="text-school21 hover:underline"
+              >21-school@rudn.ru</a
+            >
           </p>
         </div>
       </div>

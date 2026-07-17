@@ -7,18 +7,27 @@
 
     <div class="relative z-10 max-w-5xl mx-auto">
       <h2 class="text-3xl sm:text-5xl font-bold uppercase text-center mb-3">Как поступить</h2>
-      <p class="text-center text-gray-600 dark:text-gray-400 mb-10 sm:mb-14">Шесть шагов от регистрации до первого дня в кампусе</p>
+      <p class="text-center text-gray-600 dark:text-gray-400 mb-10 sm:mb-14">
+        Шесть шагов от регистрации до первого дня в кампусе
+      </p>
 
       <div class="relative" ref="roadmap">
-        <svg ref="svgContainer" class="absolute inset-0 w-full h-full pointer-events-none z-0 hidden md:block" preserveAspectRatio="none"></svg>
+        <svg
+          ref="svgContainer"
+          class="absolute inset-0 w-full h-full pointer-events-none z-0 hidden md:block"
+          preserveAspectRatio="none"
+        ></svg>
 
         <!-- Маскоты, блуждающие по всей секции -->
-        <div class="absolute inset-0 z-20 pointer-events-none hidden md:block" ref="mascotsContainer">
+        <div
+          class="absolute inset-0 z-20 pointer-events-none hidden md:block"
+          ref="mascotsContainer"
+        >
           <!-- Утка – стартует справа сверху -->
           <div
             ref="duckRef"
             class="absolute w-16 h-16 opacity-80 pointer-events-auto cursor-pointer"
-            style="top: 10%; left: 80%;"
+            style="top: 10%; left: 80%"
             @mouseenter="jumpAway(duckRef)"
           >
             <DuckSprite class="w-12 h-12" />
@@ -27,7 +36,7 @@
           <div
             ref="turtleRef"
             class="absolute w-16 h-16 opacity-80 pointer-events-auto cursor-pointer"
-            style="top: 85%; left: 10%;"
+            style="top: 85%; left: 10%"
             @mouseenter="jumpAway(turtleRef)"
           >
             <TurtleSprite class="w-14 h-14 sm:w-16 sm:h-16" />
@@ -38,16 +47,22 @@
           <div
             v-for="(step, index) in steps"
             :key="step.num"
-            :ref="el => { if (el) cardRefs[index] = el as HTMLElement }"
+            :ref="
+              (el) => {
+                if (el) cardRefs[index] = el as HTMLElement
+              }
+            "
             class="step-card bg-white dark:bg-darkBg border-2 border-black shadow-pixel p-5 sm:p-6 max-w-md mx-auto md:mx-0 opacity-0 transition-all duration-300 ease-out"
             :class="{
               'md:ml-0 md:mr-auto': index % 2 === 0,
               'md:ml-auto md:mr-0': index % 2 === 1,
-              'is-visible': cardVisible[index]
+              'is-visible': cardVisible[index],
             }"
           >
             <div class="flex items-start gap-4">
-              <div class="flex-shrink-0 w-12 h-12 bg-school21 border-2 border-black flex items-center justify-center font-bold text-2xl text-black">
+              <div
+                class="flex-shrink-0 w-12 h-12 bg-school21 border-2 border-black flex items-center justify-center font-bold text-2xl text-black"
+              >
                 {{ step.num }}
               </div>
               <div>
@@ -59,10 +74,14 @@
         </div>
       </div>
 
-      <div class="mt-14 bg-white dark:bg-darkBg border-2 border-black shadow-pixel p-6 opacity-0 transition-all duration-300 ease-out" :class="{ 'is-visible': cardsReady }">
+      <div
+        class="mt-14 bg-white dark:bg-darkBg border-2 border-black shadow-pixel p-6 opacity-0 transition-all duration-300 ease-out"
+        :class="{ 'is-visible': cardsReady }"
+      >
         <h3 class="text-2xl font-bold uppercase mb-4 text-center">Критерии отбора</h3>
         <p class="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-4 text-center">
-          Отборочные испытания на оба образовательных трека проходят в одном месте и в одно время, но зарегистрироваться можно только на один!
+          Отборочные испытания на оба образовательных трека проходят в одном месте и в одно время,
+          но зарегистрироваться можно только на один!
         </p>
         <ol class="space-y-3 list-decimal list-inside text-base sm:text-lg">
           <li>Для «ИИ-инженер» требуются знания базового Python</li>
@@ -71,9 +90,14 @@
         </ol>
       </div>
 
-      <div class="mt-8 bg-school21/10 dark:bg-school21/20 border-2 border-black p-6 text-center opacity-0 transition-all duration-300 ease-out" :class="{ 'is-visible': cardsReady }">
+      <div
+        class="mt-8 bg-school21/10 dark:bg-school21/20 border-2 border-black p-6 text-center opacity-0 transition-all duration-300 ease-out"
+        :class="{ 'is-visible': cardsReady }"
+      >
         <p class="font-bold uppercase mb-2">Даты отборочных испытаний:</p>
-        <p class="text-base sm:text-lg">1 — 4 июля, 29 сентября — 2 октября, 13 — 16 октября, 27 — 30 октября</p>
+        <p class="text-base sm:text-lg">
+          1 — 4 июля, 29 сентября — 2 октября, 13 — 16 октября, 27 — 30 октября
+        </p>
         <p class="font-bold uppercase mt-4 mb-2">Старт основного обучения:</p>
         <p class="text-2xl font-bold text-school21">18 ноября 2026</p>
       </div>
@@ -89,11 +113,23 @@ import { trackGoal } from '../../utils/analytics'
 
 const steps = [
   { num: 1, title: 'Регистрация', desc: 'Зарегистрироваться в личном кабинете.' },
-  { num: 2, title: 'Выбор времени', desc: 'Выбрать удобное время установочной встречи в личном кабинете после регистрации.' },
-  { num: 3, title: 'Установочная встреча', desc: 'Прийти на установочную встречу в кампусе или подключиться онлайн и получить информацию, необходимую для выбора трека обучения.' },
-  { num: 4, title: 'Отборочный этап', desc: 'Пройти отборочный этап на свой трек: 4 дня очно в новом кампусе «Школы 21» и РУДН. Отборочные испытания на оба трека проходят в одном месте и в одно время, но зарегистрироваться можно только на один!' },
+  {
+    num: 2,
+    title: 'Выбор времени',
+    desc: 'Выбрать удобное время установочной встречи в личном кабинете после регистрации.',
+  },
+  {
+    num: 3,
+    title: 'Установочная встреча',
+    desc: 'Прийти на установочную встречу в кампусе или подключиться онлайн и получить информацию, необходимую для выбора трека обучения.',
+  },
+  {
+    num: 4,
+    title: 'Отборочный этап',
+    desc: 'Пройти отборочный этап на свой трек: 4 дня очно в новом кампусе «Школы 21» и РУДН. Отборочные испытания на оба трека проходят в одном месте и в одно время, но зарегистрироваться можно только на один!',
+  },
   { num: 5, title: 'Ожидание результатов', desc: 'Дождаться результатов отбора.' },
-  { num: 6, title: 'Начало обучения', desc: 'Начать свой путь — уже в этом семестре.' }
+  { num: 6, title: 'Начало обучения', desc: 'Начать свой путь — уже в этом семестре.' },
 ]
 
 const cardRefs = ref<HTMLElement[]>([])
@@ -115,7 +151,7 @@ function getCardCenter(card: HTMLElement, container: HTMLElement): { x: number; 
   const containerRect = container.getBoundingClientRect()
   return {
     x: cardRect.left - containerRect.left + cardRect.width / 2,
-    y: cardRect.top - containerRect.top + cardRect.height / 2
+    y: cardRect.top - containerRect.top + cardRect.height / 2,
   }
 }
 
@@ -123,7 +159,7 @@ function animateDashedCurve(
   from: { x: number; y: number },
   to: { x: number; y: number },
   onHalfway?: () => void,
-  onComplete?: () => void
+  onComplete?: () => void,
 ) {
   if (!svgContainer.value) {
     if (onHalfway) setTimeout(onHalfway, 150)
@@ -216,7 +252,7 @@ function jumpAway(mascot: HTMLElement | null) {
 
   const isDuck = mascot === duckRef.value
   trackGoal('mascot_interaction', { type: isDuck ? 'duck' : 'turtle' })
-  
+
   const parent = mascot.parentElement
   const maxX = parent.clientWidth - 64
   const maxY = parent.clientHeight - 64
@@ -270,7 +306,9 @@ function animateSequence() {
     const from = getCardCenter(currentCard, roadmap.value!)
     const to = getCardCenter(nextCard, roadmap.value!)
 
-    animateDashedCurve(from, to,
+    animateDashedCurve(
+      from,
+      to,
       () => {
         if (!cardVisible.value[currentIndex + 1]) {
           cardVisible.value[currentIndex + 1] = true
@@ -279,7 +317,7 @@ function animateSequence() {
       () => {
         currentIndex++
         showNext()
-      }
+      },
     )
   }
 
@@ -288,16 +326,16 @@ function animateSequence() {
 
 onMounted(() => {
   observer = new IntersectionObserver(
-  (entries) => {
-    const first = entries[0]
-    if (first && first.isIntersecting) {
-      animateSequence()
-      startRandomWalks()
-      observer?.unobserve(first.target)
-    }
-  },
-  { threshold: 0.2 }
-)
+    (entries) => {
+      const first = entries[0]
+      if (first && first.isIntersecting) {
+        animateSequence()
+        startRandomWalks()
+        observer?.unobserve(first.target)
+      }
+    },
+    { threshold: 0.2 },
+  )
   const section = document.querySelector('#howto')
   if (section) observer.observe(section)
 })

@@ -29,7 +29,11 @@ let rainStopTimer: ReturnType<typeof setTimeout> | null = null
 
 function bounce(el: HTMLElement | null) {
   if (!el) return
-  gsap.fromTo(el, { scale: 1 }, { scale: 1.25, duration: 0.12, yoyo: true, repeat: 1, ease: 'power1.inOut' })
+  gsap.fromTo(
+    el,
+    { scale: 1 },
+    { scale: 1.25, duration: 0.12, yoyo: true, repeat: 1, ease: 'power1.inOut' },
+  )
 }
 
 function spawnMascotRain(type: MascotType) {

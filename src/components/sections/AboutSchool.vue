@@ -15,7 +15,9 @@
           :style="{ transitionDelay: index * 0.1 + 's' }"
         >
           <div class="flex items-start gap-4">
-            <div class="flex-shrink-0 w-10 h-10 bg-school21purple border-2 border-black flex items-center justify-center group transition-transform duration-300 hover:scale-110">
+            <div
+              class="flex-shrink-0 w-10 h-10 bg-school21purple border-2 border-black flex items-center justify-center group transition-transform duration-300 hover:scale-110"
+            >
               <component :is="item.icon" class="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
             <div>
@@ -27,7 +29,9 @@
       </div>
 
       <!-- Кампус -->
-      <div class="campus-block bg-gray-100 dark:bg-[#161D27] border-2 border-black shadow-pixel p-6 sm:p-8">
+      <div
+        class="campus-block bg-gray-100 dark:bg-[#161D27] border-2 border-black shadow-pixel p-6 sm:p-8"
+      >
         <h3 class="text-xl sm:text-2xl font-bold uppercase mb-6 text-center">Кампус</h3>
 
         <div class="grid md:grid-cols-2 gap-6">
@@ -42,7 +46,9 @@
               <Mail class="w-5 h-5 flex-shrink-0" />
               <p class="text-base sm:text-lg">
                 <span class="font-bold">Email: </span>
-                <a href="mailto:21-school@rudn.ru" class="text-school21 hover:underline">21-school@rudn.ru</a>
+                <a href="mailto:21-school@rudn.ru" class="text-school21 hover:underline"
+                  >21-school@rudn.ru</a
+                >
               </p>
             </div>
             <div class="flex items-center justify-center gap-2 flex-wrap">
@@ -54,10 +60,14 @@
           </div>
 
           <div class="flex justify-center gap-4">
-            <div class="w-16 h-16 bg-school21 border-2 border-black flex items-center justify-center">
+            <div
+              class="w-16 h-16 bg-school21 border-2 border-black flex items-center justify-center"
+            >
               <MapPin class="w-8 h-8 text-black" />
             </div>
-            <div class="w-16 h-16 bg-school21purple border-2 border-black flex items-center justify-center">
+            <div
+              class="w-16 h-16 bg-school21purple border-2 border-black flex items-center justify-center"
+            >
               <GraduationCap class="w-8 h-8 text-white" />
             </div>
           </div>
@@ -75,18 +85,18 @@ const features = [
   {
     icon: Code,
     title: 'Много практики',
-    desc: 'Реальные задачи, геймификация, твой проект - реальный кейс в портфолио'
+    desc: 'Реальные задачи, геймификация, твой проект - реальный кейс в портфолио',
   },
   {
     icon: Target,
     title: 'Без расписаний и лекций',
-    desc: 'Прокачка навыков на практике'
+    desc: 'Прокачка навыков на практике',
   },
   {
     icon: Users,
     title: 'Равный равному',
-    desc: 'Обучение в коллаборации с другими студентами, всегда в команде'
-  }
+    desc: 'Обучение в коллаборации с другими студентами, всегда в команде',
+  },
 ]
 
 // Анимация появления с таймером для плавного скрытия
@@ -112,7 +122,7 @@ onMounted(() => {
         }
       })
     },
-    { threshold: 0.2 }
+    { threshold: 0.2 },
   )
 
   document.querySelectorAll('.feature-card, .campus-block').forEach((el) => {
@@ -131,7 +141,9 @@ onUnmounted(() => {
 .campus-block {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
 }
 
 .feature-card.is-visible,

@@ -17,9 +17,9 @@ let triggers: ScrollTrigger[] = []
 let loops: gsap.core.Tween[] = []
 
 function killAll() {
-  triggers.forEach(t => t.kill())
+  triggers.forEach((t) => t.kill())
   triggers = []
-  loops.forEach(t => t.kill())
+  loops.forEach((t) => t.kill())
   loops = []
 }
 
@@ -45,7 +45,7 @@ function setupMobileAnimation() {
     start: 'top top',
     end: 'bottom bottom',
     scrub: 0.5,
-    onUpdate: self => {
+    onUpdate: (self) => {
       if (!streamMobileRef.value || !duckMobileWrapperRef.value || !duckMobileRef.value) return
 
       const containerWidth = streamMobileRef.value.clientWidth
@@ -104,7 +104,11 @@ onUnmounted(() => {
 <template>
   <!-- МОБИЛЬНЫЙ: горизонтальный трек внизу -->
   <div ref="streamMobileRef" class="fixed bottom-4 left-4 right-4 h-3 z-30 sm:hidden">
-    <svg class="absolute inset-0 w-full h-full overflow-visible" viewBox="0 0 200 20" preserveAspectRatio="none">
+    <svg
+      class="absolute inset-0 w-full h-full overflow-visible"
+      viewBox="0 0 200 20"
+      preserveAspectRatio="none"
+    >
       <defs>
         <linearGradient id="streamGradH" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stop-color="#44EB99" />
@@ -117,19 +121,38 @@ onUnmounted(() => {
       <g clip-path="url(#streamClipH)">
         <rect x="0" y="0" width="200" height="20" fill="url(#streamGradH)" />
         <g class="wave-layer wave-layer--slow wave-layer--horizontal">
-          <path d="M10 -20 Q4 -10 10 0 T10 20 T10 40 T10 60" stroke="rgba(255,255,255,.4)" stroke-width="2" fill="none" />
-          <path d="M100 -20 Q94 -10 100 0 T100 20 T100 40 T100 60" stroke="rgba(255,255,255,.3)" stroke-width="2" fill="none" />
-          <path d="M180 -20 Q174 -10 180 0 T180 20 T180 40 T180 60" stroke="rgba(255,255,255,.35)" stroke-width="2" fill="none" />
+          <path
+            d="M10 -20 Q4 -10 10 0 T10 20 T10 40 T10 60"
+            stroke="rgba(255,255,255,.4)"
+            stroke-width="2"
+            fill="none"
+          />
+          <path
+            d="M100 -20 Q94 -10 100 0 T100 20 T100 40 T100 60"
+            stroke="rgba(255,255,255,.3)"
+            stroke-width="2"
+            fill="none"
+          />
+          <path
+            d="M180 -20 Q174 -10 180 0 T180 20 T180 40 T180 60"
+            stroke="rgba(255,255,255,.35)"
+            stroke-width="2"
+            fill="none"
+          />
         </g>
       </g>
     </svg>
 
     <!-- top-0 + yPercent(-78%) в JS: утка сидит на самой верхней грани трека, как на поверхности реки -->
-    <div ref="duckMobileWrapperRef" class="absolute left-0 top-0 w-8 h-8 z-50" style="will-change: transform;">
+    <div
+      ref="duckMobileWrapperRef"
+      class="absolute left-0 top-0 w-8 h-8 z-50"
+      style="will-change: transform"
+    >
       <div
         ref="duckMobileRef"
         class="w-full h-full cursor-pointer select-none"
-        style="will-change: transform;"
+        style="will-change: transform"
         @click="handleDuckClick(duckMobileRef, 'duck')"
       >
         <DuckSprite class="w-full h-full" />
@@ -139,12 +162,7 @@ onUnmounted(() => {
       <a
         href="#register"
         @click="trackGoal('duck_bubble_register_clicked')"
-        class="duck-bubble duck-bubble--down absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 pointer-events-auto
-               bg-school21 hover:bg-school21dark text-black font-bold
-               text-[9px] leading-none py-1 px-1.5
-               border-2 border-black shadow-pixel-sm
-               hover:shadow-none transition-all
-               whitespace-nowrap uppercase"
+        class="duck-bubble duck-bubble--down absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 pointer-events-auto bg-school21 hover:bg-school21dark text-black font-bold text-[9px] leading-none py-1 px-1.5 border-2 border-black shadow-pixel-sm hover:shadow-none transition-all whitespace-nowrap uppercase"
       >
         Записаться!
       </a>
@@ -178,14 +196,36 @@ onUnmounted(() => {
 .wave-layer path {
   vector-effect: non-scaling-stroke;
 }
-.wave-layer--slow { animation: flow-x 2.6s linear infinite; }
-.wave-layer--fast { animation: flow-x 1.4s linear infinite; }
-.wave-layer--horizontal { animation: flow-y 2.6s linear infinite; }
-@keyframes flow-x { from { transform: translateX(0); } to { transform: translateX(20px); } }
-@keyframes flow-y { from { transform: translateY(0); } to { transform: translateY(20px); } }
+.wave-layer--slow {
+  animation: flow-x 2.6s linear infinite;
+}
+.wave-layer--fast {
+  animation: flow-x 1.4s linear infinite;
+}
+.wave-layer--horizontal {
+  animation: flow-y 2.6s linear infinite;
+}
+@keyframes flow-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(20px);
+  }
+}
+@keyframes flow-y {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(20px);
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .wave-layer { animation: none !important; }
+  .wave-layer {
+    animation: none !important;
+  }
 }
 
 /* Диалоговый пузырь-хвостик в пиксельном стиле: двойной треугольник
@@ -263,6 +303,9 @@ onUnmounted(() => {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .duck-rain-item { animation: none !important; display: none; }
+  .duck-rain-item {
+    animation: none !important;
+    display: none;
+  }
 }
 </style>

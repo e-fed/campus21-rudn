@@ -47,46 +47,120 @@ const RIGHT_PATH =
     <svg class="w-full h-full" viewBox="-150 0 1300 4000" preserveAspectRatio="none">
       <defs>
         <pattern id="flowChevrons" width="46" height="30" patternUnits="userSpaceOnUse">
-          <path d="M0,30 L23,4 L46,30" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="6" stroke-linecap="round" />
+          <path
+            d="M0,30 L23,4 L46,30"
+            fill="none"
+            stroke="rgba(255,255,255,0.75)"
+            stroke-width="6"
+            stroke-linecap="round"
+          />
         </pattern>
         <pattern id="flowChevronsSlow" width="70" height="46" patternUnits="userSpaceOnUse">
-          <path d="M0,46 L35,6 L70,46" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="8" stroke-linecap="round" />
+          <path
+            d="M0,46 L35,6 L70,46"
+            fill="none"
+            stroke="rgba(255,255,255,0.35)"
+            stroke-width="8"
+            stroke-linecap="round"
+          />
         </pattern>
         <!-- клип по каждому руслу, чтобы CSS-анимированные волны не вылезали за пределы обводки -->
-        <clipPath id="clipMain"><path :d="MAIN_PATH" stroke-width="160" fill="none" stroke-linecap="round" /></clipPath>
+        <clipPath id="clipMain">
+          <path :d="MAIN_PATH" stroke-width="160" fill="none" stroke-linecap="round" />
+        </clipPath>
       </defs>
 
       <g class="river-branch">
-        <path :d="MAIN_PATH" fill="none" :stroke="getRiverColor()" stroke-width="160" stroke-linecap="round" stroke-linejoin="round"
-          class="transition-colors duration-1000" :opacity="getMainOpacity()" />
+        <path
+          :d="MAIN_PATH"
+          fill="none"
+          :stroke="getRiverColor()"
+          stroke-width="160"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="transition-colors duration-1000"
+          :opacity="getMainOpacity()"
+        />
         <!-- течение теперь через CSS transform на <g>, а не SMIL animateTransform -->
         <g class="flow-layer flow-layer--slow" :opacity="getMainOpacity()">
-          <path :d="MAIN_PATH" fill="none" stroke="url(#flowChevronsSlow)" stroke-width="150" stroke-linecap="round" />
+          <path
+            :d="MAIN_PATH"
+            fill="none"
+            stroke="url(#flowChevronsSlow)"
+            stroke-width="150"
+            stroke-linecap="round"
+          />
         </g>
         <g class="flow-layer flow-layer--fast" :opacity="getMainOpacity()">
-          <path :d="MAIN_PATH" fill="none" stroke="url(#flowChevrons)" stroke-width="90" stroke-linecap="round" />
+          <path
+            :d="MAIN_PATH"
+            fill="none"
+            stroke="url(#flowChevrons)"
+            stroke-width="90"
+            stroke-linecap="round"
+          />
         </g>
       </g>
 
       <g class="river-branch">
-        <path :d="LEFT_PATH" fill="none" :stroke="getRiverColor()" stroke-width="140" stroke-linecap="round" stroke-linejoin="round"
-          class="transition-colors duration-1000" :opacity="getLeftOpacity()" />
+        <path
+          :d="LEFT_PATH"
+          fill="none"
+          :stroke="getRiverColor()"
+          stroke-width="140"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="transition-colors duration-1000"
+          :opacity="getLeftOpacity()"
+        />
         <g class="flow-layer flow-layer--slow" :opacity="getLeftOpacity()">
-          <path :d="LEFT_PATH" fill="none" stroke="url(#flowChevronsSlow)" stroke-width="130" stroke-linecap="round" />
+          <path
+            :d="LEFT_PATH"
+            fill="none"
+            stroke="url(#flowChevronsSlow)"
+            stroke-width="130"
+            stroke-linecap="round"
+          />
         </g>
         <g class="flow-layer flow-layer--fast" :opacity="getLeftOpacity()">
-          <path :d="LEFT_PATH" fill="none" stroke="url(#flowChevrons)" stroke-width="76" stroke-linecap="round" />
+          <path
+            :d="LEFT_PATH"
+            fill="none"
+            stroke="url(#flowChevrons)"
+            stroke-width="76"
+            stroke-linecap="round"
+          />
         </g>
       </g>
 
       <g class="river-branch">
-        <path :d="RIGHT_PATH" fill="none" :stroke="getRiverColor()" stroke-width="150" stroke-linecap="round" stroke-linejoin="round"
-          class="transition-colors duration-1000" :opacity="getRightOpacity()" />
+        <path
+          :d="RIGHT_PATH"
+          fill="none"
+          :stroke="getRiverColor()"
+          stroke-width="150"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="transition-colors duration-1000"
+          :opacity="getRightOpacity()"
+        />
         <g class="flow-layer flow-layer--slow" :opacity="getRightOpacity()">
-          <path :d="RIGHT_PATH" fill="none" stroke="url(#flowChevronsSlow)" stroke-width="140" stroke-linecap="round" />
+          <path
+            :d="RIGHT_PATH"
+            fill="none"
+            stroke="url(#flowChevronsSlow)"
+            stroke-width="140"
+            stroke-linecap="round"
+          />
         </g>
         <g class="flow-layer flow-layer--fast" :opacity="getRightOpacity()">
-          <path :d="RIGHT_PATH" fill="none" stroke="url(#flowChevrons)" stroke-width="82" stroke-linecap="round" />
+          <path
+            :d="RIGHT_PATH"
+            fill="none"
+            stroke="url(#flowChevrons)"
+            stroke-width="82"
+            stroke-linecap="round"
+          />
         </g>
       </g>
     </svg>
@@ -105,12 +179,18 @@ const RIGHT_PATH =
   animation-duration: 1.1s;
 }
 @keyframes flow-move {
-  from { transform: translateY(-46px); }
-  to { transform: translateY(0); }
+  from {
+    transform: translateY(-46px);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .flow-layer { animation: none !important; }
+  .flow-layer {
+    animation: none !important;
+  }
 }
 
 /* Защитный дубль: сама река уже не рендерится на <md (hidden md:block на корневом
@@ -118,6 +198,8 @@ const RIGHT_PATH =
    Правило ниже — просто страховка на случай, если в будущем div-обёртку
    изменят и уберут hidden, не заметив, что анимация должна остаться md+. */
 @media (max-width: 767px) {
-  .flow-layer { animation: none !important; }
+  .flow-layer {
+    animation: none !important;
+  }
 }
 </style>

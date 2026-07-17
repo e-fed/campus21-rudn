@@ -1,19 +1,35 @@
 <template>
   <div class="flex justify-center gap-2 sm:gap-4 mt-4">
-    <div class="bg-white dark:bg-gray-800 border-2 border-black shadow-pixel p-2 sm:p-3 text-center w-16 sm:w-20">
-      <span class="block text-2xl sm:text-3xl font-bold">{{ days.toString().padStart(2, '0') }}</span>
+    <div
+      class="bg-white dark:bg-gray-800 border-2 border-black shadow-pixel p-2 sm:p-3 text-center w-16 sm:w-20"
+    >
+      <span class="block text-2xl sm:text-3xl font-bold">{{
+        days.toString().padStart(2, '0')
+      }}</span>
       <span class="text-xs sm:text-sm uppercase">дн</span>
     </div>
-    <div class="bg-white dark:bg-gray-800 border-2 border-black shadow-pixel p-2 sm:p-3 text-center w-16 sm:w-20">
-      <span class="block text-2xl sm:text-3xl font-bold">{{ hours.toString().padStart(2, '0') }}</span>
+    <div
+      class="bg-white dark:bg-gray-800 border-2 border-black shadow-pixel p-2 sm:p-3 text-center w-16 sm:w-20"
+    >
+      <span class="block text-2xl sm:text-3xl font-bold">{{
+        hours.toString().padStart(2, '0')
+      }}</span>
       <span class="text-xs sm:text-sm uppercase">ч</span>
     </div>
-    <div class="bg-white dark:bg-gray-800 border-2 border-black shadow-pixel p-2 sm:p-3 text-center w-16 sm:w-20">
-      <span class="block text-2xl sm:text-3xl font-bold">{{ minutes.toString().padStart(2, '0') }}</span>
+    <div
+      class="bg-white dark:bg-gray-800 border-2 border-black shadow-pixel p-2 sm:p-3 text-center w-16 sm:w-20"
+    >
+      <span class="block text-2xl sm:text-3xl font-bold">{{
+        minutes.toString().padStart(2, '0')
+      }}</span>
       <span class="text-xs sm:text-sm uppercase">мин</span>
     </div>
-    <div class="bg-white dark:bg-gray-800 border-2 border-black shadow-pixel p-2 sm:p-3 text-center w-16 sm:w-20">
-      <span class="block text-2xl sm:text-3xl font-bold">{{ seconds.toString().padStart(2, '0') }}</span>
+    <div
+      class="bg-white dark:bg-gray-800 border-2 border-black shadow-pixel p-2 sm:p-3 text-center w-16 sm:w-20"
+    >
+      <span class="block text-2xl sm:text-3xl font-bold">{{
+        seconds.toString().padStart(2, '0')
+      }}</span>
       <span class="text-xs sm:text-sm uppercase">сек</span>
     </div>
   </div>

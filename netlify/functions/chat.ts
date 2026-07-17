@@ -77,9 +77,9 @@ export const handler: Handler = async (event: HandlerEvent, _context: HandlerCon
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ answer }),
     }
-  } catch (err: any) {
+  } catch (err) {
     console.error('Chat proxy failed:', err)
-    if (err.name === 'TimeoutError') {
+    if (err instanceof Error && err.name === 'TimeoutError') {
       return { statusCode: 504, body: JSON.stringify({ error: 'gateway timeout' }) }
     }
     return { statusCode: 500, body: JSON.stringify({ error: 'internal error' }) }

@@ -1,26 +1,40 @@
-import { globalIgnores } from 'eslint/config'
 import { defineConfigWithVueTs, vueTsConfigs } from '@vue/eslint-config-typescript'
 import pluginVue from 'eslint-plugin-vue'
 import pluginOxlint from 'eslint-plugin-oxlint'
-import skipFormatting from 'eslint-config-prettier/flat'
+import eslintConfigPrettier from 'eslint-config-prettier'
 
-// To allow more languages other than `ts` in `.vue` files, uncomment the following lines:
-// import { configureVueProject } from '@vue/eslint-config-typescript'
-// configureVueProject({ scriptLangs: ['ts', 'tsx'] })
-// More info at https://github.com/vuejs/eslint-config-typescript/#advanced-setup
-
+// https://eslint.vuejs.org/user-guide/#usage
 export default defineConfigWithVueTs(
   {
     name: 'app/files-to-lint',
-    files: ['**/*.{vue,ts,mts,tsx}'],
+    files: ['**/*.{ts,mts,tsx,vue}'],
+  },
+  {
+    name: 'app/files-to-ignore',
+    ignores: [
+      '**/dist/**',
+      '**/dist-ssr/**',
+      '**/coverage/**',
+      '**/node_modules/**',
+      '**/.netlify/**',
+    ],
   },
 
-  globalIgnores(['**/dist/**', '**/dist-ssr/**', '**/coverage/**']),
-
-  ...pluginVue.configs['flat/essential'],
+  pluginVue.configs['flat/essential'],
   vueTsConfigs.recommended,
+  {
+    name: 'app/rule-overrides',
+    rules: {
+      // В проекте осознанно используются короткие однословные имена
+      // компонентов (Logo, River, Employers) — это стиль проекта, не ошибка
+      'vue/multi-word-component-names': 'off',
+    },
+  },
 
-  ...pluginOxlint.buildFromOxlintConfigFile('.oxlintrc.json'),
+  // oxlint уже покрывает часть быстрых стилевых правил (запускается отдельным
+  // скриптом lint:oxlint) — отключаем те же правила здесь, чтобы не дублировать
+  // одинаковые предупреждения дважды в npm run lint
+  ...pluginOxlint.configs['flat/recommended'],
 
-  skipFormatting,
+  eslintConfigPrettier,
 )

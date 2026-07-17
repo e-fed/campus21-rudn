@@ -1,10 +1,5 @@
 <template>
-  <svg
-    viewBox="0 0 16 16"
-    class="drop-shadow-md"
-    :class="className"
-    shape-rendering="crispEdges"
-  >
+  <svg viewBox="0 0 16 16" class="drop-shadow-md" :class="className" shape-rendering="crispEdges">
     <rect x="4" y="8" width="8" height="6" fill="#FFD700" />
     <rect x="3" y="9" width="10" height="4" fill="#FFD700" />
     <rect x="5" y="4" width="6" height="5" fill="#FFD700" />

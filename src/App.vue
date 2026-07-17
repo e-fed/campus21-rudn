@@ -26,7 +26,7 @@ import DesktopRiverPanel from './components/layout/DesktopRiverPanel.vue'
 import FloatingRegisterButton from './components/layout/FloatingRegisterButton.vue'
 import { provideRiverState } from './composables/useRiver'
 
-const riverState = provideRiverState()
+provideRiverState()
 const isDark = ref(false)
 
 onMounted(() => {
@@ -51,8 +51,9 @@ const toggleTheme = () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[#F4F4F9] dark:bg-darkBg text-textMain dark:text-white transition-colors duration-300 font-pixel text-xl sm:text-2xl">
-    
+  <div
+    class="min-h-screen bg-[#F4F4F9] dark:bg-darkBg text-textMain dark:text-white transition-colors duration-300 font-pixel text-xl sm:text-2xl"
+  >
     <AppHeader :is-dark="isDark" @toggle-theme="toggleTheme" />
 
     <!-- Ручеек с уткой (десктоп/мобильный) -->
@@ -99,28 +100,51 @@ const toggleTheme = () => {
 
 <style>
 @keyframes swimRight {
-  0% { transform: translateX(-100vw); }
-  100% { transform: translateX(100vw); }
+  0% {
+    transform: translateX(-100vw);
+  }
+  100% {
+    transform: translateX(100vw);
+  }
 }
 @keyframes swimLeft {
-  0% { transform: translateX(100vw) scaleX(-1); }
-  100% { transform: translateX(-100vw) scaleX(-1); }
+  0% {
+    transform: translateX(100vw) scaleX(-1);
+  }
+  100% {
+    transform: translateX(-100vw) scaleX(-1);
+  }
 }
 @keyframes bob {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
 }
 @keyframes breathe {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.03); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
 }
 .animate-breathe {
   animation: breathe 2s ease-in-out infinite;
 }
 
 @keyframes bounce-right {
-  0%, 100% { transform: translateX(0); }
-  50% { transform: translateX(4px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(4px);
+  }
 }
 .animate-bounce-right {
   animation: bounce-right 1.5s ease-in-out infinite;
