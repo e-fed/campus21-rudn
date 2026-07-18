@@ -34,7 +34,7 @@ const onExternalClick = (type: string, event: Event) => {
             <li>
               <a href="#howto" class="hover:text-school21 transition-colors">Как поступить</a>
             </li>
-            <li><a href="#faq" class="hover:text-school21 transition-colors">FAQ</a></li>
+            <li><a href="#quiz" class="hover:text-school21 transition-colors">Тест</a></li>
           </ul>
         </div>
 
@@ -71,7 +71,13 @@ const onExternalClick = (type: string, event: Event) => {
       <div class="text-center text-xs sm:text-sm text-gray-500 dark:text-gray-400 space-y-1">
         <p>© Российский университет дружбы народов, 2026</p>
         <p>
-          <a href="#" class="hover:underline">Политика обработки персональных данных</a>
+          <a
+            href="https://www.rudn.ru/personal-data-processing-and-protection-policy"
+            target="_blank"
+            rel="noopener"
+            class="hover:underline"
+            >Политика обработки персональных данных</a
+          >
         </p>
       </div>
     </div>
