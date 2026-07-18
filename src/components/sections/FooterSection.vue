@@ -30,11 +30,9 @@ const onExternalClick = (type: string, event: Event) => {
           <h4 class="font-bold uppercase mb-3 text-sm sm:text-base">Навигация</h4>
           <ul class="space-y-2 text-sm sm:text-base">
             <li><a href="#about" class="hover:text-school21 transition-colors">О программе</a></li>
-            <li><a href="#tracks" class="hover:text-school21 transition-colors">Треки</a></li>
-            <li>
-              <a href="#howto" class="hover:text-school21 transition-colors">Как поступить</a>
-            </li>
             <li><a href="#quiz" class="hover:text-school21 transition-colors">Тест</a></li>
+            <li><a href="#tracks" class="hover:text-school21 transition-colors">Треки</a></li>
+            <li><a href="#howto" class="hover:text-school21 transition-colors">Как поступить</a></li>
           </ul>
         </div>
 
