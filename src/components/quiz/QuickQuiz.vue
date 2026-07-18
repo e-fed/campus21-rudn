@@ -121,8 +121,17 @@ const selectTrack = (trackId: 'duck' | 'turtle') => {
 
 const shareCopied = ref(false)
 
+// У каждого результата — своя статичная страница в /share/*.html с уникальными og:title/og:image.
+// Так мессенджеры и соцсети (которые не выполняют JS и читают только HTML при построении
+// превью ссылки) покажут именно тот результат, который получил человек, а не общую карточку сайта.
+const sharePages: Record<'duck' | 'turtle' | 'tie', string> = {
+  duck: '/share/duck.html',
+  turtle: '/share/turtle.html',
+  tie: '/share/tie.html',
+}
+
 const shareResult = async (trackId: 'duck' | 'turtle' | 'tie') => {
-  const shareUrl = `${window.location.origin}${window.location.pathname}#quiz`
+  const shareUrl = `${window.location.origin}${sharePages[trackId]}`
 
   const text =
     trackId === 'tie'

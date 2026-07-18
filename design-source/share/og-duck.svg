@@ -1,0 +1,68 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges">
+  <defs>
+    <linearGradient id="water" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#5EEBC4" />
+      <stop offset="45%" stop-color="#12C4E8" />
+      <stop offset="100%" stop-color="#0670C9" />
+    </linearGradient>
+    <linearGradient id="waterDeep" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0D5FB8" />
+      <stop offset="100%" stop-color="#083E8C" />
+    </linearGradient>
+  </defs>
+
+  <!-- фон -->
+  <rect width="1200" height="630" fill="#1D2633"/>
+
+  <!-- звёзды/точки как на сайте -->
+  <circle cx="90" cy="70" r="2.5" fill="#44eb99" opacity="0.7"/>
+  <circle cx="1120" cy="60" r="2" fill="#861be3" opacity="0.6"/>
+  <circle cx="1050" cy="150" r="3" fill="#44eb99" opacity="0.5"/>
+  <circle cx="60" cy="200" r="2" fill="#861be3" opacity="0.5"/>
+  <circle cx="1150" cy="230" r="2.5" fill="#44eb99" opacity="0.6"/>
+
+  <!-- бережок -->
+  <rect x="0" y="452" width="1200" height="16" fill="#4FA23C"/>
+  <rect x="0" y="466" width="1200" height="10" fill="#7A4E28"/>
+
+  <!-- река -->
+  <rect x="0" y="476" width="1200" height="154" fill="url(#waterDeep)"/>
+  <rect x="0" y="476" width="1200" height="46" fill="url(#water)"/>
+  <g fill="#ffffff" opacity="0.35">
+    <rect x="40" y="500" width="18" height="4"/>
+    <rect x="140" y="512" width="18" height="4"/>
+    <rect x="260" y="496" width="18" height="4"/>
+    <rect x="900" y="508" width="18" height="4"/>
+    <rect x="1020" y="494" width="18" height="4"/>
+    <rect x="1120" y="514" width="18" height="4"/>
+  </g>
+
+  <!-- ЗАГОЛОВОК -->
+  <text x="600" y="95" font-family="PixelUni, VT323, monospace" font-size="30" fill="#44eb99" text-anchor="middle" letter-spacing="4">РУДН × ШКОЛА 21 · РЕЗУЛЬТАТ КВИЗА</text>
+  <text x="600" y="170" font-family="PixelUni, VT323, monospace" font-size="62" fill="#ffffff" text-anchor="middle">Кто ты в мире ИИ?</text>
+  <text x="600" y="222" font-family="PixelUni, VT323, monospace" font-size="26" fill="#c9d4e0" text-anchor="middle">Пройди квиз и узнай свой трек в кампусе РУДН × Школа 21</text>
+
+  <!-- бейдж результата: центр по x=600 (350 + 500/2) -->
+  <rect x="350" y="256" width="500" height="60" fill="#000000"/>
+  <rect x="344" y="250" width="500" height="60" fill="#44eb99" stroke="#000000" stroke-width="4"/>
+  <text x="594" y="292" font-family="PixelUni, VT323, monospace" font-size="28" fill="#000000" text-anchor="middle" letter-spacing="2">ТВОЙ ПУТЬ: ЦИФРОВОЙ ЗАКАЗЧИК</text>
+
+  <!-- УТКА: точная копия DuckSprite.vue, сетка 16x16.
+       scale=10 (не 16!) и translate-Y=465 подобраны так, чтобы ВЕСЬ спрайт
+       (local y 4-14) укладывался внутри канваса (высота 630) без обрезки
+       нижним краем: bottom = 465+14*10=605, top = 465+4*10=505 — оба в
+       пределах воды (476-630). Локальный визуальный центр x=8 (диапазон 2-14,
+       симметричен) → translate-x = 600 - 8*10 = 520, для центра по x=600. -->
+  <g transform="translate(520,465) scale(10)">
+    <rect x="4" y="8" width="8" height="6" fill="#FFD700" />
+    <rect x="3" y="9" width="10" height="4" fill="#FFD700" />
+    <rect x="5" y="4" width="6" height="5" fill="#FFD700" />
+    <rect x="10" y="6" width="4" height="2" fill="#FF8C00" />
+    <rect x="8" y="5" width="1" height="1" fill="#000000" />
+    <rect x="5" y="10" width="4" height="2" fill="#E6C200" />
+    <rect x="2" y="9" width="2" height="2" fill="#E6C200" />
+  </g>
+
+  <!-- рябь под уткой, центр совпадает с визуальным центром спрайта, чуть ниже "подошвы" -->
+  <ellipse cx="600" cy="608" rx="60" ry="7" fill="#ffffff" opacity="0.15"/>
+</svg>
