@@ -354,9 +354,13 @@ onUnmounted(() => {
       </div>
 
       <!-- Пузырь сидит справа от маскота на его уровне и указывает "клювом" в голову.
-           Появляется только когда доплыл до раздела «О программе» — иначе перекрывает лого. -->
+           Появляется только когда доплыл до раздела «О программе» — иначе перекрывает лого.
+           @pointerdown.stop обязателен: иначе тап по пузырю перехватывает pointerdown-обработчик
+           драга на родительском контейнере (утка-бегунок), и вместо перехода по ссылке
+           срабатывает логика "тап по маскоту" (пасхалка), а сама ссылка не открывается. -->
       <a
         href="#register"
+        @pointerdown.stop
         @click="trackGoal('duck_bubble_register_clicked')"
         class="duck-bubble duck-bubble--right absolute top-1/2 left-full -translate-y-1/2 ml-2.5 z-50
                bg-school21 hover:bg-school21dark text-black font-bold
@@ -417,9 +421,11 @@ onUnmounted(() => {
         <component :is="MascotComponent" class="w-full h-full" />
       </div>
 
-      <!-- Диалоговый пузырь над маскотом, не разворачивается вместе с ним (текст всегда читаем) -->
+      <!-- Диалоговый пузырь над маскотом, не разворачивается вместе с ним (текст всегда читаем).
+           @pointerdown.stop — по той же причине, что и в десктопной версии выше. -->
       <a
         href="#register"
+        @pointerdown.stop
         @click="trackGoal('duck_bubble_register_clicked')"
         class="duck-bubble duck-bubble--down absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 pointer-events-auto
                bg-school21 hover:bg-school21dark text-black font-bold

@@ -64,7 +64,7 @@
               class="w-full aspect-[4/3] md:aspect-auto md:h-full min-h-[220px] border-2 border-black shadow-pixel overflow-hidden"
             >
               <iframe
-                src="https://yandex.ru/map-widget/v1/?ll=37.623595%2C55.713987&z=19&l=map&pt=37.623595,55.713987,pm2rdm"
+                src="https://yandex.ru/map-widget/v1/?ll=37.623595%2C55.713987&z=17&l=map&pt=37.623595,55.713987,pm2rdm"
                 width="100%"
                 height="100%"
                 frameborder="0"

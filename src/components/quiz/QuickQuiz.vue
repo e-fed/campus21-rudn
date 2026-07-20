@@ -126,13 +126,17 @@ const isSharing = ref(false)
 const shareStatus = ref<'downloaded' | null>(null)
 let shareStatusTimer: ReturnType<typeof setTimeout> | null = null
 
-// Готовые обложки и share-страницы уже лежат в public/share/ (см. duck.html/turtle.html/tie.html
-// и og-duck.png/og-turtle.png/og-tie.png) — у каждой страницы свои og:title/og:image, поэтому
-// превью ссылки в мессенджере всегда показывает именно тот результат, который получил человек.
-const shareAssets: Record<'duck' | 'turtle' | 'tie', { image: string; page: string; title: string }> = {
-  duck: { image: '/share/og-duck.png', page: '/share/duck.html', title: 'Мой путь: Цифровой заказчик' },
-  turtle: { image: '/share/og-turtle.png', page: '/share/turtle.html', title: 'Мой путь: ИИ-инженер' },
-  tie: { image: '/share/og-tie.png', page: '/share/tie.html', title: 'Мне подходят оба трека!' },
+// Готовые обложки уже лежат в public/share/ (og-duck.png/og-turtle.png/og-tie.png) —
+// именно их прикрепляем как файл при шеринге. Ссылка в тексте — всегда на реальный
+// адрес сайта (не window.location.origin, чтобы не отправить, например, адрес
+// превью-деплоя или localhost, если делятся не с продакшена), ведёт сразу на раздел
+// с квизом.
+const SITE_QUIZ_URL = 'https://campus21-rudn.netlify.app/#quiz'
+
+const shareAssets: Record<'duck' | 'turtle' | 'tie', { image: string; title: string }> = {
+  duck: { image: '/share/og-duck.png', title: 'Мой путь: Цифровой заказчик' },
+  turtle: { image: '/share/og-turtle.png', title: 'Мой путь: ИИ-инженер' },
+  tie: { image: '/share/og-tie.png', title: 'Мне подходят оба трека!' },
 }
 
 async function handleShare() {
@@ -142,7 +146,7 @@ async function handleShare() {
 
   const key = result.value
   const asset = shareAssets[key]
-  const shareUrl = `${window.location.origin}${asset.page}`
+  const shareUrl = SITE_QUIZ_URL
 
   const shareText =
     key === 'tie'
