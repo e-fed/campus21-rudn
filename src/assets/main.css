@@ -4,6 +4,12 @@
 
 html {
   scroll-behavior: smooth;
+  /* Нативный скроллбар скрыт — вместо него рисуется кастомный (CustomScrollbar.vue),
+     который умеет уходить под шапку и который можно тащить мышкой/пальцем. */
+  scrollbar-width: none; /* Firefox */
+}
+html::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
 }
 
 body {

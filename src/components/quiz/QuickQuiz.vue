@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { Check, RotateCcw, Share2 } from 'lucide-vue-next'
+import { Check, RotateCcw, Share2, Loader2 } from 'lucide-vue-next'
 import { useRiverState } from '../../composables/useRiver'
 import DuckSprite from '../shared/DuckSprite.vue'
 import TurtleSprite from '../shared/TurtleSprite.vue'
 import { trackGoal } from '../../utils/analytics'
+import { shareResultImage } from '../../composables/useShareResult'
 
 const riverState = useRiverState()
 
@@ -119,47 +120,52 @@ const selectTrack = (trackId: 'duck' | 'turtle') => {
   riverState.value.selectedTrack = trackId
 }
 
-const shareCopied = ref(false)
+const isSharing = ref(false)
+// Короткая подпись под кнопкой — иначе в фолбэк-сценарии (скачивание + буфер обмена)
+// человек не видит вообще никакого отклика на клик и не понимает, сработало ли.
+const shareStatus = ref<'downloaded' | null>(null)
+let shareStatusTimer: ReturnType<typeof setTimeout> | null = null
 
-// У каждого результата — своя статичная страница в /share/*.html с уникальными og:title/og:image.
-// Так мессенджеры и соцсети (которые не выполняют JS и читают только HTML при построении
-// превью ссылки) покажут именно тот результат, который получил человек, а не общую карточку сайта.
-const sharePages: Record<'duck' | 'turtle' | 'tie', string> = {
-  duck: '/share/duck.html',
-  turtle: '/share/turtle.html',
-  tie: '/share/tie.html',
+// Готовые обложки и share-страницы уже лежат в public/share/ (см. duck.html/turtle.html/tie.html
+// и og-duck.png/og-turtle.png/og-tie.png) — у каждой страницы свои og:title/og:image, поэтому
+// превью ссылки в мессенджере всегда показывает именно тот результат, который получил человек.
+const shareAssets: Record<'duck' | 'turtle' | 'tie', { image: string; page: string; title: string }> = {
+  duck: { image: '/share/og-duck.png', page: '/share/duck.html', title: 'Мой путь: Цифровой заказчик' },
+  turtle: { image: '/share/og-turtle.png', page: '/share/turtle.html', title: 'Мой путь: ИИ-инженер' },
+  tie: { image: '/share/og-tie.png', page: '/share/tie.html', title: 'Мне подходят оба трека!' },
 }
 
-const shareResult = async (trackId: 'duck' | 'turtle' | 'tie') => {
-  const shareUrl = `${window.location.origin}${sharePages[trackId]}`
+async function handleShare() {
+  if (isSharing.value) return
+  isSharing.value = true
+  trackGoal('quiz_result_share_clicked')
 
-  const text =
-    trackId === 'tie'
-      ? 'Я прошёл квиз кампуса РУДН × Школа 21 — оказалось, мне подходят сразу оба трека: «Цифровой заказчик» и «ИИ-инженер»! Пройди и узнай свой:'
-      : `Я прошёл квиз кампуса РУДН × Школа 21 — мой путь: ${programs[trackId].name}! Пройди и узнай свой:`
+  const key = result.value
+  const asset = shareAssets[key]
+  const shareUrl = `${window.location.origin}${asset.page}`
 
-  trackGoal('quiz_result_shared', { track: trackId })
+  const shareText =
+    key === 'tie'
+      ? `Я прошёл квиз кампуса РУДН × Школа 21 — оказалось, мне подходят сразу оба трека: «Цифровой заказчик» и «ИИ-инженер»! Пройди и узнай свой: ${shareUrl}`
+      : `Прошёл(-ла) квиз кампуса РУДН × Школа 21 — мой трек: ${key === 'duck' ? programs.duck.name : programs.turtle.name}. Пройди тоже: ${shareUrl}`
 
-  // navigator.share сам красиво комбинирует text и url в нативном шаринге —
-  // передавать готовую ссылку внутри text не нужно, иначе она задваивается
-  if (navigator.share) {
-    try {
-      await navigator.share({ title: 'Кампус РУДН × Школа 21', text, url: shareUrl })
-      return
-    } catch {
-      // пользователь отменил шеринг — просто ничего не делаем
-      return
-    }
+  const status = await shareResultImage({
+    imagePath: asset.image,
+    fileName: `campus21-rudn-${key}.png`,
+    shareTitle: asset.title,
+    shareText,
+  })
+
+  // При 'shared' системное меню само показывает результат — отдельно уведомлять не нужно.
+  // При 'downloaded' (фолбэк) люди иначе не поймут, что картинка сохранилась,
+  // а текст со ссылкой уже лежит в буфере обмена — готов вставить в сообщение.
+  if (status === 'downloaded') {
+    shareStatus.value = 'downloaded'
+    if (shareStatusTimer) clearTimeout(shareStatusTimer)
+    shareStatusTimer = setTimeout(() => (shareStatus.value = null), 4000)
   }
 
-  // Фолбэк (десктоп без Web Share API): копируем текст и ссылку одной строкой
-  try {
-    await navigator.clipboard.writeText(`${text} ${shareUrl}`)
-    shareCopied.value = true
-    setTimeout(() => (shareCopied.value = false), 2000)
-  } catch {
-    // clipboard недоступен — молча игнорируем, кнопка не критична
-  }
+  isSharing.value = false
 }
 
 const programs = {
@@ -239,8 +245,10 @@ const programs = {
       </div>
 
       <!-- Экран результата: УТКА -->
-      <div v-else-if="result === 'duck'" class="text-center space-y-4 sm:space-y-6 animate-fade-in">
-        <!-- (без изменений) -->
+      <div
+        v-else-if="result === 'duck'"
+        class="text-center space-y-4 sm:space-y-6 animate-fade-in"
+      >
         <div class="flex justify-center mb-2 sm:mb-4">
           <DuckSprite
             class="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 animate-[bob_3s_ease-in-out_infinite]"
@@ -271,19 +279,25 @@ const programs = {
           >
             <RotateCcw class="w-5 h-5 sm:w-6 sm:h-6" /> Заново
           </button>
+          <button
+            @click="handleShare"
+            :disabled="isSharing"
+            class="inline-flex items-center justify-center gap-2 bg-white/60 dark:bg-darkBg/60 hover:bg-gray-300 dark:hover:bg-gray-600 text-black dark:text-white font-bold py-3 px-6 sm:py-4 sm:px-8 border-2 border-black shadow-pixel hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-sm sm:text-base md:text-xl min-h-[48px] disabled:opacity-60"
+          >
+            <Loader2 v-if="isSharing" class="w-5 h-5 sm:w-6 sm:h-6 animate-spin" />
+            <Share2 v-else class="w-5 h-5 sm:w-6 sm:h-6" /> Поделиться
+          </button>
         </div>
-        <button
-          @click="shareResult('duck')"
-          class="inline-flex items-center justify-center gap-2 mx-auto text-xs sm:text-sm font-bold uppercase text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors underline underline-offset-4"
-        >
-          <Share2 class="w-4 h-4" /> {{ shareCopied ? 'Ссылка скопирована!' : 'Поделиться результатом' }}
-        </button>
+        <p v-if="shareStatus === 'downloaded'" class="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+          Картинка скачана, текст с ссылкой скопирован — можно вставить в сообщение
+        </p>
       </div>
+
+      <!-- Экран результата: ЧЕРЕПАХА -->
       <div
         v-else-if="result === 'turtle'"
         class="text-center space-y-4 sm:space-y-6 animate-fade-in"
       >
-        <!-- (без изменений) -->
         <div class="flex justify-center mb-2 sm:mb-4">
           <TurtleSprite
             class="w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 animate-[bob_3s_ease-in-out_infinite]"
@@ -314,17 +328,25 @@ const programs = {
           >
             <RotateCcw class="w-5 h-5 sm:w-6 sm:h-6" /> Заново
           </button>
+          <button
+            @click="handleShare"
+            :disabled="isSharing"
+            class="inline-flex items-center justify-center gap-2 bg-white/60 dark:bg-darkBg/60 hover:bg-gray-300 dark:hover:bg-gray-600 text-black dark:text-white font-bold py-3 px-6 sm:py-4 sm:px-8 border-2 border-black shadow-pixel hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-sm sm:text-base md:text-xl min-h-[48px] disabled:opacity-60"
+          >
+            <Loader2 v-if="isSharing" class="w-5 h-5 sm:w-6 sm:h-6 animate-spin" />
+            <Share2 v-else class="w-5 h-5 sm:w-6 sm:h-6" /> Поделиться
+          </button>
         </div>
-        <button
-          @click="shareResult('turtle')"
-          class="inline-flex items-center justify-center gap-2 mx-auto text-xs sm:text-sm font-bold uppercase text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors underline underline-offset-4"
-        >
-          <Share2 class="w-4 h-4" /> {{ shareCopied ? 'Ссылка скопирована!' : 'Поделиться результатом' }}
-        </button>
+        <p v-if="shareStatus === 'downloaded'" class="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+          Картинка скачана, текст с ссылкой скопирован — можно вставить в сообщение
+        </p>
       </div>
 
       <!-- Экран результата: НИЧЬЯ -->
-      <div v-else-if="result === 'tie'" class="text-center space-y-4 sm:space-y-6 animate-fade-in">
+      <div
+        v-else-if="result === 'tie'"
+        class="text-center space-y-4 sm:space-y-6 animate-fade-in"
+      >
         <!-- (без изменений) -->
         <div class="flex justify-center gap-4 sm:gap-6 mb-2 sm:mb-4">
           <div class="animate-[jump_1.5s_ease-in-out_infinite]">
@@ -354,7 +376,7 @@ const programs = {
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pt-2 sm:pt-4 px-2 sm:px-0">
           <div
-            class="h-full flex flex-col border-2 border-black shadow-pixel p-3 sm:p-4 bg-white/60 dark:bg-darkBg/60 backdrop-blur-sm transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
+            class="border-2 border-black shadow-pixel p-3 sm:p-4 bg-white/60 dark:bg-darkBg/60 backdrop-blur-sm transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
           >
             <h4
               class="font-bold uppercase mb-1 sm:mb-2 text-sm sm:text-base"
@@ -366,14 +388,14 @@ const programs = {
             <p class="text-xs sm:text-sm mb-2 sm:mb-3">{{ programs.duck.doc }}</p>
             <button
               @click="selectTrack('duck')"
-              class="mt-auto block w-full text-center bg-school21 hover:bg-school21dark text-black font-bold py-2.5 px-4 border-2 border-black shadow-pixel-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-xs sm:text-sm min-h-[44px] flex items-center justify-center"
+              class="block w-full text-center bg-school21 hover:bg-school21dark text-black font-bold py-2.5 px-4 border-2 border-black shadow-pixel-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-xs sm:text-sm min-h-[44px] flex items-center justify-center"
             >
               Выбрать
             </button>
           </div>
 
           <div
-            class="h-full flex flex-col border-2 border-black shadow-pixel p-3 sm:p-4 bg-white/60 dark:bg-darkBg/60 backdrop-blur-sm transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
+            class="border-2 border-black shadow-pixel p-3 sm:p-4 bg-white/60 dark:bg-darkBg/60 backdrop-blur-sm transition-all hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none"
           >
             <h4
               class="font-bold uppercase mb-1 sm:mb-2 text-sm sm:text-base"
@@ -385,14 +407,14 @@ const programs = {
             <p class="text-xs sm:text-sm mb-2 sm:mb-3">{{ programs.turtle.doc }}</p>
             <button
               @click="selectTrack('turtle')"
-              class="mt-auto block w-full text-center bg-school21 hover:bg-school21dark text-black font-bold py-2.5 px-4 border-2 border-black shadow-pixel-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-xs sm:text-sm min-h-[44px] flex items-center justify-center"
+              class="block w-full text-center bg-school21 hover:bg-school21dark text-black font-bold py-2.5 px-4 border-2 border-black shadow-pixel-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-xs sm:text-sm min-h-[44px] flex items-center justify-center"
             >
               Выбрать
             </button>
           </div>
         </div>
 
-        <div class="flex flex-col items-center gap-3 sm:gap-4 mt-2 sm:mt-4">
+        <div class="flex flex-col sm:flex-row gap-3 justify-center mt-2 sm:mt-4">
           <button
             @click="resetQuiz"
             class="inline-flex items-center justify-center gap-2 bg-white/60 dark:bg-darkBg/60 hover:bg-gray-300 dark:hover:bg-gray-600 text-black dark:text-white font-bold py-2.5 px-6 border-2 border-black shadow-pixel hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-xs sm:text-sm min-h-[44px]"
@@ -401,12 +423,18 @@ const programs = {
             Пройти заново
           </button>
           <button
-            @click="shareResult('tie')"
-            class="inline-flex items-center justify-center gap-2 text-xs sm:text-sm font-bold uppercase text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white transition-colors underline underline-offset-4"
+            @click="handleShare"
+            :disabled="isSharing"
+            class="inline-flex items-center justify-center gap-2 bg-white/60 dark:bg-darkBg/60 hover:bg-gray-300 dark:hover:bg-gray-600 text-black dark:text-white font-bold py-2.5 px-6 border-2 border-black shadow-pixel hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all uppercase text-xs sm:text-sm min-h-[44px] disabled:opacity-60"
           >
-            <Share2 class="w-4 h-4" /> {{ shareCopied ? 'Ссылка скопирована!' : 'Поделиться результатом' }}
+            <Loader2 v-if="isSharing" class="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+            <Share2 v-else class="w-4 h-4 sm:w-5 sm:h-5" />
+            Поделиться
           </button>
         </div>
+        <p v-if="shareStatus === 'downloaded'" class="text-xs sm:text-sm text-gray-600 dark:text-gray-300">
+          Картинка скачана, текст с ссылкой скопирован — можно вставить в сообщение
+        </p>
       </div>
     </div>
   </section>

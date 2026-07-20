@@ -59,17 +59,29 @@
             </div>
           </div>
 
-          <div class="flex justify-center gap-4">
+          <div class="flex flex-col gap-3">
             <div
-              class="w-16 h-16 bg-school21 border-2 border-black flex items-center justify-center"
+              class="w-full aspect-[4/3] md:aspect-auto md:h-full min-h-[220px] border-2 border-black shadow-pixel overflow-hidden"
             >
-              <MapPin class="w-8 h-8 text-black" />
+              <iframe
+                src="https://yandex.ru/map-widget/v1/?ll=37.623595%2C55.713987&z=19&l=map&pt=37.623595,55.713987,pm2rdm"
+                width="100%"
+                height="100%"
+                frameborder="0"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                title="Кампус РУДН × Школа 21 на Яндекс Картах — Подольское шоссе, 8"
+                class="grayscale-[15%] contrast-[1.05]"
+              ></iframe>
             </div>
-            <div
-              class="w-16 h-16 bg-school21purple border-2 border-black flex items-center justify-center"
+            <a
+              href="https://yandex.ru/maps/213/moscow/?ll=37.623940%2C55.713671&mode=poi&poi%5Bpoint%5D=37.623595%2C55.713987&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D32481427192&z=19.32"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center gap-2 text-xs sm:text-sm font-bold uppercase text-school21dark dark:text-school21 hover:underline"
             >
-              <GraduationCap class="w-8 h-8 text-white" />
-            </div>
+              <MapPin class="w-4 h-4" /> Открыть на Яндекс Картах
+            </a>
           </div>
         </div>
       </div>
@@ -79,7 +91,7 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
-import { Code, Target, Users, MapPin, Mail, Clock, GraduationCap } from 'lucide-vue-next'
+import { Code, Target, Users, MapPin, Mail, Clock } from 'lucide-vue-next'
 
 const features = [
   {
