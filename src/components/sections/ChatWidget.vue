@@ -1,5 +1,30 @@
 <template>
   <div class="fixed bottom-24 right-4 md:right-6 z-[60]">
+    <!-- Подсказка-пузырь: "Есть вопросы?" — появляется один раз, когда пользователь
+         долистал до раздела «О кампусе» или формы заявки, и ещё не открывал чат.
+         Не открываем сам чат автоматически (по итогам тестирования: пользователь
+         может принять внезапно открывшееся окно за баг/всплывающее окно) — только
+         мягкая подсказка рядом с уже существующей кнопкой. -->
+    <Transition name="fade">
+      <div
+        v-if="showNudge && !isOpen"
+        class="chat-nudge absolute bottom-full right-0 mb-3 w-56 bg-school21 border-2 border-black shadow-pixel p-3 cursor-pointer"
+        @click="openChatFromNudge"
+      >
+        <button
+          type="button"
+          aria-label="Закрыть подсказку"
+          class="absolute -top-2 -right-2 bg-white dark:bg-darkBg border-2 border-black rounded-full w-5 h-5 flex items-center justify-center text-[10px] leading-none hover:bg-gray-100"
+          @click.stop="dismissNudge"
+        >
+          ✕
+        </button>
+        <p class="text-black text-sm font-bold leading-snug">
+          Есть вопросы? <br />Спроси прямо в чате — отвечу сразу.
+        </p>
+      </div>
+    </Transition>
+
     <Transition name="fade">
       <button
         v-if="!isOpen"
@@ -95,7 +120,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, nextTick, onMounted } from 'vue'
+import { ref, nextTick, onMounted, onUnmounted } from 'vue'
 import { MessageCircle, X } from 'lucide-vue-next'
 import { trackGoal } from '../../utils/analytics'
 import { CAMPUS_FACTS_ARRAY } from '../../data/campusFacts'
@@ -107,6 +132,57 @@ const input = ref('')
 const messages = ref<ChatMessage[]>([])
 const isTyping = ref(false)
 const messagesContainer = ref<HTMLElement>()
+
+// --- Подсказка "Есть вопросы?" рядом с кнопкой чата ---
+// По итогам коридорного тестирования: пользователь не сразу опознаёт кнопку
+// чата как ИИ-помощника. Показываем ненавязчивую подсказку один раз за визит
+// (не при каждой загрузке — иначе надоедает), когда пользователь долистал до
+// «О кампусе» или формы заявки — то есть уже достаточно вовлечён, чтобы
+// вопросы могли реально появиться.
+const NUDGE_SEEN_KEY = 'campus21-chat-nudge-seen'
+const showNudge = ref(false)
+let nudgeObserver: IntersectionObserver | null = null
+let nudgeAutoHideTimer: ReturnType<typeof setTimeout> | null = null
+
+function hasSeenNudge(): boolean {
+  try {
+    return sessionStorage.getItem(NUDGE_SEEN_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+
+function markNudgeSeen() {
+  try {
+    sessionStorage.setItem(NUDGE_SEEN_KEY, '1')
+  } catch {
+    /* приватный режим браузера — просто не запоминаем между сессиями, не критично */
+  }
+}
+
+function triggerNudge() {
+  if (hasSeenNudge() || isOpen.value) return
+  showNudge.value = true
+  markNudgeSeen()
+  trackGoal('chat_nudge_shown')
+  if (nudgeAutoHideTimer) clearTimeout(nudgeAutoHideTimer)
+  nudgeAutoHideTimer = setTimeout(() => {
+    showNudge.value = false
+  }, 10000)
+}
+
+function dismissNudge() {
+  showNudge.value = false
+  if (nudgeAutoHideTimer) clearTimeout(nudgeAutoHideTimer)
+  trackGoal('chat_nudge_dismissed')
+}
+
+function openChatFromNudge() {
+  showNudge.value = false
+  if (nudgeAutoHideTimer) clearTimeout(nudgeAutoHideTimer)
+  trackGoal('chat_nudge_clicked')
+  openChat()
+}
 
 const aiCache = new Map<string, string>()
 const CACHE_KEY = 'campus21-ai-cache-v2'
@@ -458,6 +534,28 @@ onMounted(() => {
     from: 'bot',
     text: 'Привет! Я бот-помощник кампуса РУДН × Школа 21. Задайте вопрос про обучение или кампус.',
   })
+
+  // Показываем подсказку, как только пользователь долистал до раздела «О кампусе»
+  // или формы заявки — оба варианта наблюдаем одним IntersectionObserver.
+  const targets = [document.getElementById('campus'), document.getElementById('register')].filter(
+    (el): el is HTMLElement => el !== null
+  )
+  if (targets.length > 0) {
+    nudgeObserver = new IntersectionObserver(
+      entries => {
+        const anyVisible = entries.some(e => e.isIntersecting)
+        if (anyVisible) triggerNudge()
+      },
+      { threshold: 0.3 }
+    )
+    targets.forEach(el => nudgeObserver?.observe(el))
+  }
+})
+
+onUnmounted(() => {
+  nudgeObserver?.disconnect()
+  nudgeObserver = null
+  if (nudgeAutoHideTimer) clearTimeout(nudgeAutoHideTimer)
 })
 
 function scrollToBottom() {
@@ -521,5 +619,29 @@ const sendMessage = async () => {
 .slide-up-leave-to {
   opacity: 0;
   transform: translateY(20px);
+}
+
+/* Пиксельный хвостик пузыря-подсказки, указывающий вниз на кнопку чата —
+   тот же приём двойного треугольника (чёрный чуть больше + цветной поверх),
+   что и в duck-bubble у маскотов реки. */
+.chat-nudge::before,
+.chat-nudge::after {
+  content: '';
+  position: absolute;
+  right: 18px;
+  width: 0;
+  height: 0;
+}
+.chat-nudge::before {
+  bottom: -11px;
+  border-style: solid;
+  border-width: 11px 8px 0 8px;
+  border-color: black transparent transparent transparent;
+}
+.chat-nudge::after {
+  bottom: -8px;
+  border-style: solid;
+  border-width: 8px 6px 0 6px;
+  border-color: var(--color-school21) transparent transparent transparent;
 }
 </style>

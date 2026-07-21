@@ -64,10 +64,10 @@ onUnmounted(() => {
 
 <template>
   <header
-    class="fixed top-0 left-0 right-0 z-40 bg-white/90 dark:bg-darkBg/90 backdrop-blur-sm border-b-2 border-black transition-transform duration-300 ease-in-out"
+    class="fixed top-0 left-0 right-0 z-40 bg-white dark:bg-darkBg md:bg-white/90 md:dark:bg-darkBg/90 backdrop-blur-none md:backdrop-blur-sm border-b-2 border-black transition-transform duration-300 ease-in-out"
     :class="hideHeader ? 'md:-translate-y-full' : 'md:translate-y-0'"
   >
-    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="max-w-7xl mx-auto px-4 py-2 md:py-3 flex items-center justify-between">
       <!-- Логотип -->
       <Logo :is-dark="isDark" />
 
