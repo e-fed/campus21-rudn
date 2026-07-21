@@ -123,7 +123,7 @@ onUnmounted(() => {
     <Transition name="menu">
       <div
         v-if="menuOpen"
-        class="fixed inset-0 top-0 z-[70] lg:hidden flex flex-col bg-white/95 dark:bg-darkBg/90 backdrop-blur-xl"
+        class="fixed inset-0 top-0 z-[80] lg:hidden flex flex-col bg-white/95 dark:bg-darkBg/90 backdrop-blur-xl"
       >
         <div class="flex items-center justify-between p-4 border-b-2 border-black">
           <div class="shrink-0">
